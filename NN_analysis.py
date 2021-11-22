@@ -57,15 +57,10 @@ df2.replace(replace_map, inplace=True)
 
 from sklearn.model_selection import train_test_split
 
-x = df2.values 
+cols = df2.iloc[:,:-1]
+x = cols.values
 y = df2['satisfaction'].values
 
-# # Normalize features
-# for feature in range (x.shape[1]):
-#     min = x[:,feature].min()
-#     max = x[:,feature].max()
-#     x[:,feature] = (x[:,feature]-min) / (max-min)
-    
 x_train, x_test, y_train, y_test = train_test_split (x, y, test_size=0.2, random_state=42)
 print("The training data size is : {} ".format(x_train.shape))
 print("The test data size is : {} ".format(x_test.shape))
@@ -75,13 +70,39 @@ print("The test data size is : {} ".format(x_test.shape))
 #Decision Tree Classifier
 from sklearn.tree import DecisionTreeClassifier
 
-dct = DecisionTreeClassifier(max_depth=None)
-dct.fit(x_train,y_train)
-dct_training_score = 100*dct.score(x_train, y_train)
-print ('Tree Depth:', dct.get_depth())
-print ('Tree Leaves:', dct.get_n_leaves())
-dct_test_score = 100*dct.score(x_test, y_test)
-print("Decision Tree accuracy:-\nTrain : ",dct_training_score ,"%")
-print("Test: ",dct_test_score ,"%. ")
+tree1 = DecisionTreeClassifier(max_depth=None)
+tree1.fit(x_train,y_train)
+tree1_training_score = 100*tree1.score(x_train, y_train)
+print ('Tree Depth:', tree1.get_depth())
+print ('Tree Leaves:', tree1.get_n_leaves())
+tree1_test_score = 100*tree1.score(x_test, y_test)
+print("Decision Tree accuracy:-\nTrain : ",tree1_training_score ,"%")
+print("Test: ",tree1_test_score ,"%. ")
 
+
+#%%
+
+# Tree depth dependency
+max_d = tree1.get_depth()
+tree1_training_score, tree1_test_score = np.zeros(max_d), np.zeros(max_d)
+for i in range (max_d):
+  tree1 = DecisionTreeClassifier(max_depth=i+1)
+  tree1.fit(x_train,y_train)
+  tree1_training_score[i] = 100*tree1.score(x_train, y_train)
+  tree1_test_score[i] = 100*tree1.score(x_test, y_test)
+
+print (np.around (tree1_training_score, decimals=2))  
+print (np.around (tree1_test_score, decimals=2))
+plt.plot (tree1_training_score)
+plt.plot(tree1_test_score)
+
+#%%
+
+# Get most important tree features
+features = cols.columns
+importances = tree1.feature_importances_
+leading_indices = (-importances).argsort()[:22]
+print ("Features sorted by importance:")
+for i in range (22):
+    print (i+1, features[leading_indices[i]], round(100*importances[leading_indices[i]],2), '%')
 #%%
