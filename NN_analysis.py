@@ -37,15 +37,15 @@ df.shape
 # What are the factors that satisfy the passenger?
 ############################################################################
 #%%
-# We are starting with decision tree model to find out the answer.
-# For decision tree we need the values to be numeric.
-df2=df.copy()
-# replace_map_gender = {'Gender': {'Male': 0,'Female': 1 }}
-# replace_map_ctype = {'customer_type': {'disloyal Customer': 0,'Loyal Customer': 1}}
-# replace_map_travel = {'type_of_travel': {'Personal Travel': 0,'Business travel': 1}}
-# replace_map_class = {'customer_class': {'Eco': 0,'Eco Plus': 1 , 'Business': 2}}
-# replace_map_sat = {'satisfaction': {'neutral or dissatisfied': 0,'satisfied': 1}}
+print(" We are starting with decision tree model to find out the answer.")
+# For decision tree we need the values to be numeric. So, we are converting the following features to numeric.
+# 'Gender': {'Male': 0,'Female': 1 }
+# 'customer_type': {'disloyal Customer': 0,'Loyal Customer': 1}
+# 'type_of_travel': {'Personal Travel': 0,'Business travel': 1}
+# 'customer_class': {'Eco': 0,'Eco Plus': 1 , 'Business': 2}
+# 'satisfaction': {'neutral or dissatisfied': 0,'satisfied': 1}
 
+df2=df.copy()
 replace_map = {'Gender': {'Male': 0,'Female': 1 },
                         'customer_type': {'disloyal Customer': 0,'Loyal Customer': 1},
                         'type_of_travel': {'Personal Travel': 0,'Business travel': 1},
@@ -61,6 +61,7 @@ cols = df2.iloc[:,:-1]
 x = cols.values
 y = df2['satisfaction'].values
 
+# Train-Test split
 x_train, x_test, y_train, y_test = train_test_split (x, y, test_size=0.2, random_state=1)
 print("The training data size is : {} ".format(x_train.shape))
 print("The test data size is : {} ".format(x_test.shape))
@@ -76,12 +77,6 @@ from sklearn.tree import DecisionTreeClassifier
 tree1 = DecisionTreeClassifier(max_depth=None,criterion='entropy')
 # Fit dt to the training set
 clf = tree1.fit(x_train,y_train)
-# tree1_training_score = 100*tree1.score(x_train, y_train)
-# print ('Tree Depth:', tree1.get_depth())
-# print ('Tree Leaves:', tree1.get_n_leaves())
-# tree1_test_score = 100*tree1.score(x_test, y_test)
-# print("Decision Tree accuracy:-\nTrain : ",tree1_training_score ,"%")
-# print("Test: ",tree1_test_score ,"%. ")
 y_train_pred = tree1.predict(x_train)
 y_test_pred = tree1.predict(x_test)
 
@@ -89,32 +84,22 @@ y_test_pred = tree1.predict(x_test)
 print('train set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_train, y_train_pred))
 print("Confusion Matrix: \n",confusion_matrix(y_train, y_train_pred))
-print("Classification report",classification_report(y_train, y_train_pred))
+print("Classification report:\n",classification_report(y_train, y_train_pred))
 
+#%%
 
 # Evaluate test-set accuracy
 print('test set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_test, y_test_pred))
 print("Confusion Matrix: \n",confusion_matrix(y_test, y_test_pred))
-print("Classification report",classification_report(y_test, y_test_pred))
+print("Classification report: \n ",classification_report(y_test, y_test_pred))
 
+# Tree depth & leafs
+print ('Tree Depth:', tree1.get_depth())
+print ('Tree Leaves:', tree1.get_n_leaves())
 
-#%%
-
-# # Tree depth dependency
-# max_d = tree1.get_depth()
-# tree1_training_score, tree1_test_score = np.zeros(max_d), np.zeros(max_d)
-# for i in range (max_d):
-#   tree1 = DecisionTreeClassifier(max_depth=i+1)
-#   tree1.fit(x_train,y_train)
-#   tree1_training_score[i] = 100*tree1.score(x_train, y_train)
-#   tree1_test_score[i] = 100*tree1.score(x_test, y_test)
-
-# print (np.around (tree1_training_score, decimals=2))  
-# print (np.around (tree1_test_score, decimals=2))
-# plt.plot (tree1_training_score)
-# plt.plot(tree1_test_score)
-# plt.show()
+print("The test accuracy is 100% but the train set accuracy is around 95%. \
+ The tree has too many featues. Let's find out the which features have more importance.")
 
 #%%
 
@@ -125,6 +110,8 @@ leading_indices = (-importances).argsort()[:22]
 print ("Features sorted by importance:")
 for i in range (22):
     print (i+1, features[leading_indices[i]], round(100*importances[leading_indices[i]],2), '%')
+
+# add a graph
 
 #####################################################################################################
 # TREE 2
@@ -155,14 +142,22 @@ y_test_pred = tree2.predict(x_test)
 print('train set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_train, y_train_pred))
 print("Confusion Matrix: \n",confusion_matrix(y_train, y_train_pred))
-print("Classification report",classification_report(y_train, y_train_pred))
+print("Classification report:\n",classification_report(y_train, y_train_pred))
 
+#%%
 
 # Evaluate test-set accuracy
 print('test set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_test, y_test_pred))
 print("Confusion Matrix: \n",confusion_matrix(y_test, y_test_pred))
-print("Classification report",classification_report(y_test, y_test_pred))
+print("Classification report:\n",classification_report(y_test, y_test_pred))
+
+# Tree depth & leafs
+print ('Tree Depth:', tree2.get_depth())
+print ('Tree Leaves:', tree2.get_n_leaves())
+
+print("The test accuracy is 93.8% and the train set accuracy is around 93.6%. \
+ It means it is a good model.")
 
 
 #%%
@@ -209,14 +204,22 @@ y_test_pred = tree3.predict(x_test)
 print('train set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_train, y_train_pred))
 print("Confusion Matrix: \n",confusion_matrix(y_train, y_train_pred))
-print("Classification report",classification_report(y_train, y_train_pred))
+print("Classification report:\n",classification_report(y_train, y_train_pred))
 
-
+#%%
 # Evaluate test-set accuracy
 print('test set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_test, y_test_pred))
 print("Confusion Matrix: \n",confusion_matrix(y_test, y_test_pred))
-print("Classification report",classification_report(y_test, y_test_pred))
+print("Classification report:\n",classification_report(y_test, y_test_pred))
+
+# Tree depth & leafs
+print ('Tree Depth:', tree3.get_depth())
+print ('Tree Leaves:', tree3.get_n_leaves())
+
+print("The test accuracy is 99% but the train set accuracy is around 92%. \
+ Again, the tree seems to have too many featues. Let's find out the which features have more importance\
+ and try to make the test accuracy better.")
 
 #%%
 # Get most important tree features
@@ -261,14 +264,24 @@ y_test_pred = tree4.predict(x_test)
 print('train set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_train, y_train_pred))
 print("Confusion Matrix: \n",confusion_matrix(y_train, y_train_pred))
-print("Classification report",classification_report(y_train, y_train_pred))
+print("Classification report:\n",classification_report(y_train, y_train_pred))
 
+#%%
 
 # Evaluate test-set accuracy
 print('test set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_test, y_test_pred))
 print("Confusion Matrix: \n",confusion_matrix(y_test, y_test_pred))
-print("Classification report",classification_report(y_test, y_test_pred))
+print("Classification report:\n",classification_report(y_test, y_test_pred))
+
+# Tree depth & leafs
+print ('Tree Depth:', tree4.get_depth())
+print ('Tree Leaves:', tree4.get_n_leaves())
+
+print("The test accuracy is 91.88% but the train set accuracy is around 91.45%. \
+ So our leading 5 parameters can predict both the training and test sets to about 91% accuracy,\
+ with tree depth 18, and only 177 leaves.")
+
 
 #%%
 # Get most important tree features
@@ -279,7 +292,8 @@ print ("Features sorted by importance:")
 for i in range (5):
     print (i+1, features[leading_indices[i]], round(100*importances[leading_indices[i]],2), '%')
 
-
+print("Overall online boarding and inflight wifi service are covering the major importance.\
+Together they are covering more than 70% of importance. ")
 
 #%%
 ################################################################################################
@@ -315,14 +329,14 @@ for i in range (5):
 # Image(graph.create_png())
 
 #%%
-from sklearn import tree
-tree.plot_tree(tree4,filled=True, rounded=True, feature_names = df2.columns[:-1],class_names=['0','1'])
-plt.show()
-# %%
-from sklearn.tree import export_graphviz  
-filename = 'tree4'
-# import os
-# print(os.getcwd())
-export_graphviz(tree4, out_file = filename + '.dot' , feature_names =cols.columns) 
+# from sklearn import tree
+# tree.plot_tree(tree4,filled=True, rounded=True, feature_names = df2.columns[:-1],class_names=['0','1'])
+# plt.show()
+# # %%
+# from sklearn.tree import export_graphviz  
+# filename = 'tree4'
+# # import os
+# # print(os.getcwd())
+# export_graphviz(tree4, out_file = filename + '.dot' , feature_names =cols.columns) 
 
 # %%
