@@ -278,7 +278,7 @@ print("Classification report:\n",classification_report(y_test, y_test_pred))
 print ('Tree Depth:', tree4.get_depth())
 print ('Tree Leaves:', tree4.get_n_leaves())
 
-print("The test accuracy is 91.88% but the train set accuracy is around 91.45%. \
+print("The train accuracy is 91.88% but the test set accuracy is around 91.45%. \
  So our leading 5 parameters can predict both the training and test sets to about 91% accuracy,\
  with tree depth 18, and only 177 leaves.")
 
