@@ -71,8 +71,11 @@ print("Lets inspect the departure_delay_in_minutes column: ")
 print(df_vis.departure_delay_in_minutes.describe())
 print(df_vis.departure_delay_in_minutes.value_counts())
 # histogram
+plt.figure(figsize=(5, 5))
 sns.histplot(x ='departure_delay_in_minutes', data = df_vis)
-plt.title("Distributuion of departure_delay_in_minutes")
+plt.xlim(0,200)
+plt.ylim(0,4000)
+plt.title("Distribution of departure_delay_in_minutes")
 plt.show()
 
 #%%
@@ -82,7 +85,9 @@ print(df_vis.arrival_delay_in_minutes.describe())
 print(df_vis.arrival_delay_in_minutes.value_counts())
 # histogram
 sns.histplot(x ='arrival_delay_in_minutes', data = df_vis)
-plt.title("Distributuion of arrival_delay_in_minutes")
+plt.xlim(0,200)
+plt.ylim(0,3000)
+plt.title("Distribution of arrival_delay_in_minutes")
 plt.show()
 
 ################################################################################################
