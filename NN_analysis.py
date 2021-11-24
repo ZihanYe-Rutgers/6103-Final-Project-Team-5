@@ -278,7 +278,7 @@ print("Classification report:\n",classification_report(y_test, y_test_pred))
 print ('Tree Depth:', tree4.get_depth())
 print ('Tree Leaves:', tree4.get_n_leaves())
 
-print("The test accuracy is 91.88% but the train set accuracy is around 91.45%. \
+print("The train accuracy is 91.88% but the test set accuracy is around 91.45%. \
  So our leading 5 parameters can predict both the training and test sets to about 91% accuracy,\
  with tree depth 18, and only 177 leaves.")
 
@@ -295,48 +295,85 @@ for i in range (5):
 print("Overall online boarding and inflight wifi service are covering the major importance.\
 Together they are covering more than 70% of importance. ")
 
+
+#%%
+#%%
+############################################################################
+# TREE 5
+############################################################################
+
+print("Now we are making a final tree with depth 3.")
+
+# cols = df2[['inflight_wifi_service', 'departure_arrival_time_convenient', 'gate_location', 'online_boarding', 'inflight_entertainment', 'onboard_service','leg_room_service','baggage_handling','checkin_service', 'cleanliness']]
+cols = df2[['inflight_wifi_service', 'departure_arrival_time_convenient', 'online_boarding', 'inflight_entertainment', 'leg_room_service']]
+x = cols.values
+y = df2['satisfaction'].values
+
+x_train, x_test, y_train, y_test = train_test_split (x, y, test_size=0.2, random_state=1)
+print("The training data size is : {} ".format(x_train.shape))
+print("The test data size is : {} ".format(x_test.shape))
+
+#%%
+
+# Instantiate dtree
+tree5 = DecisionTreeClassifier(max_depth=3,criterion='entropy')
+# Fit dt to the training set
+clf5 = tree5.fit(x_train,y_train)
+y_train_pred = tree5.predict(x_train)
+y_test_pred = tree5.predict(x_test)
+
+# Evaluate train-set accuracy
+print('train set evaluation: ')
+print("Accuracy score: ",accuracy_score(y_train, y_train_pred))
+print("Confusion Matrix: \n",confusion_matrix(y_train, y_train_pred))
+print("Classification report:\n",classification_report(y_train, y_train_pred))
+
+#%%
+
+# Evaluate test-set accuracy
+print('test set evaluation: ')
+print("Accuracy score: ",accuracy_score(y_test, y_test_pred))
+print("Confusion Matrix: \n",confusion_matrix(y_test, y_test_pred))
+print("Classification report:\n",classification_report(y_test, y_test_pred))
+
+# Tree depth & leafs
+print ('Tree Depth:', tree5.get_depth())
+print ('Tree Leaves:', tree5.get_n_leaves())
+
+print("The train accuracy is 84.35% but the test set accuracy is around 84.22%. \
+ So our leading 5 parameters can predict both the training and test sets to about 84% accuracy,\
+ with tree depth 3, and only 8 leaves.")
+
+
+#%%
+# Get most important tree features
+features = cols.columns
+importances = tree5.feature_importances_
+leading_indices = (-importances).argsort()[:5]
+print ("Features sorted by importance:")
+for i in range (5):
+    print (i+1, features[leading_indices[i]], round(100*importances[leading_indices[i]],2), '%')
+
+print("Now online boarding covering the major importance of more than 50% alone.")
+
 #%%
 ################################################################################################
 #%%
-# # Graphing the tree
+# Graphing the tree
 # from sklearn.tree import export_graphviz  
   
-# # export the decision tree to a tree.dot file 
-# # for visualizing the plot easily anywhere 
+# export the decision tree to a tree.dot file 
+# for visualizing the plot easily anywhere 
 
-# filename = 'tree1'
-# # import os
-# # print(os.getcwd())
-# export_graphviz(tree1, out_file = filename + '.dot' , feature_names =df2.columns[:-1]) 
+# filename = 'tree5'
+# import os
+# print(os.getcwd())
+# export_graphviz(tree5, out_file = filename + '.dot' , feature_names =cols.columns) 
 
 # #%%
 # import pydot
-# (graph,) = pydot.graph_from_dot_file('tree1.dot')
+# (graph,) = pydot.graph_from_dot_file('tree5.dot')
 # graph.write_png(filename+'.png')
 
-#%%
-
-# from sklearn.externals.six import StringIO  
-# from IPython.display import Image  
-# from sklearn.tree import export_graphviz
-# import pydotplus
-# dot_data = StringIO()
-# export_graphviz(tree1, out_file=dot_data,  
-#                 filled=True, rounded=True,
-#                 special_characters=True, feature_names = df2.columns[:-1],class_names=['0','1'])
-# graph = pydotplus.graph_from_dot_data(dot_data.getvalue())  
-# graph.write_png('tree1.png')
-# Image(graph.create_png())
-
-#%%
-# from sklearn import tree
-# tree.plot_tree(tree4,filled=True, rounded=True, feature_names = df2.columns[:-1],class_names=['0','1'])
-# plt.show()
-# # %%
-# from sklearn.tree import export_graphviz  
-# filename = 'tree4'
-# # import os
-# # print(os.getcwd())
-# export_graphviz(tree4, out_file = filename + '.dot' , feature_names =cols.columns) 
 
 # %%
