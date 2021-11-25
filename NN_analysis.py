@@ -105,12 +105,30 @@ print("The test accuracy is 100% but the train set accuracy is around 95%. \
 
 # Get most important tree features
 features = cols.columns
+x=len(cols.columns)
 importances = tree1.feature_importances_
-leading_indices = (-importances).argsort()[:22]
+leading_indices = (-importances).argsort()[:x]
+res=pd.DataFrame(columns = ['name','val'])
+
 print ("Features sorted by importance:")
-for i in range (22):
+for i in range (x):
+    name=features[leading_indices[i]]
+    val=round(100*importances[leading_indices[i]],2)
+    res = res.append({'name': name, 'val':val},ignore_index=True)
     print (i+1, features[leading_indices[i]], round(100*importances[leading_indices[i]],2), '%')
 
+plt.figure(figsize=(10, 6))
+ax = sns.barplot(x='name',y='val', data=res)
+patches = ax.patches
+for i in range(len(patches)):
+   x = patches[i].get_x() + patches[i].get_width()/2
+   y = patches[i].get_height()+.05
+   ax.annotate('{:.1f}%'.format(res.val[i]), (x, y), ha='center')
+
+plt.title('Features sorted by importance:')
+plt.ylabel("Percentage of Importance(%)")
+plt.xticks(rotation=90)
+plt.show()
 # add a graph
 
 #####################################################################################################
@@ -158,7 +176,33 @@ print ('Tree Leaves:', tree2.get_n_leaves())
 
 print("The test accuracy is 93.8% and the train set accuracy is around 93.6%. \
  It means it is a good model.")
+#%%
+# Get most important tree features
+features = cols.columns
+x=len(cols.columns)
+importances = tree2.feature_importances_
+leading_indices = (-importances).argsort()[:x]
+res=pd.DataFrame(columns = ['name','val'])
 
+print ("Features sorted by importance:")
+for i in range (x):
+    name=features[leading_indices[i]]
+    val=round(100*importances[leading_indices[i]],2)
+    res = res.append({'name': name, 'val':val},ignore_index=True)
+    print (i+1, features[leading_indices[i]], round(100*importances[leading_indices[i]],2), '%')
+
+plt.figure(figsize=(6, 4))
+ax = sns.barplot(x='name',y='val', data=res)
+patches = ax.patches
+for i in range(len(patches)):
+   x = patches[i].get_x() + patches[i].get_width()/2
+   y = patches[i].get_height()+.05
+   ax.annotate('{:.1f}%'.format(res.val[i]), (x, y), ha='center')
+
+plt.title('Features sorted by importance:')
+plt.ylabel("Percentage of Importance(%)")
+plt.xticks(rotation=90)
+plt.show()
 
 #%%
 #################################################################################
@@ -224,11 +268,30 @@ print("The test accuracy is 99% but the train set accuracy is around 92%. \
 #%%
 # Get most important tree features
 features = cols.columns
+x=len(cols.columns)
 importances = tree3.feature_importances_
-leading_indices = (-importances).argsort()[:14]
+leading_indices = (-importances).argsort()[:x]
+res=pd.DataFrame(columns = ['name','val'])
+
 print ("Features sorted by importance:")
-for i in range (14):
+for i in range (x):
+    name=features[leading_indices[i]]
+    val=round(100*importances[leading_indices[i]],2)
+    res = res.append({'name': name, 'val':val},ignore_index=True)
     print (i+1, features[leading_indices[i]], round(100*importances[leading_indices[i]],2), '%')
+
+plt.figure(figsize=(8, 6))
+ax = sns.barplot(x='name',y='val', data=res)
+patches = ax.patches
+for i in range(len(patches)):
+   x = patches[i].get_x() + patches[i].get_width()/2
+   y = patches[i].get_height()+.05
+   ax.annotate('{:.1f}%'.format(res.val[i]), (x, y), ha='center')
+
+plt.title('Features sorted by importance:')
+plt.ylabel("Percentage of Importance(%)")
+plt.xticks(rotation=90)
+plt.show()
 
 print("\nFrom this model we can see that the most important feature for\
  passenger satisfection is online baording fascility followed by inflight\
@@ -284,19 +347,37 @@ print("The train accuracy is 91.88% but the test set accuracy is around 91.45%. 
 
 
 #%%
+#%%
 # Get most important tree features
 features = cols.columns
+x=len(cols.columns)
 importances = tree4.feature_importances_
-leading_indices = (-importances).argsort()[:5]
+leading_indices = (-importances).argsort()[:x]
+res=pd.DataFrame(columns = ['name','val'])
+
 print ("Features sorted by importance:")
-for i in range (5):
+for i in range (x):
+    name=features[leading_indices[i]]
+    val=round(100*importances[leading_indices[i]],2)
+    res = res.append({'name': name, 'val':val},ignore_index=True)
     print (i+1, features[leading_indices[i]], round(100*importances[leading_indices[i]],2), '%')
+
+plt.figure(figsize=(5, 4))
+ax = sns.barplot(x='name',y='val', data=res)
+patches = ax.patches
+for i in range(len(patches)):
+   x = patches[i].get_x() + patches[i].get_width()/2
+   y = patches[i].get_height()+.05
+   ax.annotate('{:.1f}%'.format(res.val[i]), (x, y), ha='center')
+
+plt.title('Features sorted by importance:')
+plt.ylabel("Percentage of Importance(%)")
+plt.xticks(rotation=90)
+plt.show()
 
 print("Overall online boarding and inflight wifi service are covering the major importance.\
 Together they are covering more than 70% of importance. ")
 
-
-#%%
 #%%
 ############################################################################
 # TREE 5
@@ -348,32 +429,75 @@ print("The train accuracy is 84.35% but the test set accuracy is around 84.22%. 
 #%%
 # Get most important tree features
 features = cols.columns
+x=len(cols.columns)
 importances = tree5.feature_importances_
-leading_indices = (-importances).argsort()[:5]
+leading_indices = (-importances).argsort()[:x]
+res=pd.DataFrame(columns = ['name','val'])
+
 print ("Features sorted by importance:")
-for i in range (5):
+for i in range (x):
+    name=features[leading_indices[i]]
+    val=round(100*importances[leading_indices[i]],2)
+    res = res.append({'name': name, 'val':val},ignore_index=True)
     print (i+1, features[leading_indices[i]], round(100*importances[leading_indices[i]],2), '%')
 
+plt.figure(figsize=(6, 4))
+ax = sns.barplot(x='name',y='val', data=res)
+patches = ax.patches
+for i in range(len(patches)):
+   x = patches[i].get_x() + patches[i].get_width()/2
+   y = patches[i].get_height()+.05
+   ax.annotate('{:.1f}%'.format(res.val[i]), (x, y), ha='center')
+
+plt.title('Features sorted by importance:')
+plt.ylabel("Percentage of Importance(%)")
+plt.xticks(rotation=90)
+plt.show()
 print("Now online boarding covering the major importance of more than 50% alone.")
 
 #%%
 ################################################################################################
 #%%
-# Graphing the tree
+# # Graphing the tree
 # from sklearn.tree import export_graphviz  
   
-# export the decision tree to a tree.dot file 
-# for visualizing the plot easily anywhere 
+# # export the decision tree to a tree.dot file 
+# # for visualizing the plot easily anywhere 
 
-# filename = 'tree5'
-# import os
-# print(os.getcwd())
-# export_graphviz(tree5, out_file = filename + '.dot' , feature_names =cols.columns) 
+# filename = 'tree1'
+# # import os
+# # print(os.getcwd())
+# export_graphviz(tree1, out_file = filename + '.dot' , feature_names =df2.columns[:-1]) 
 
 # #%%
 # import pydot
-# (graph,) = pydot.graph_from_dot_file('tree5.dot')
+# (graph,) = pydot.graph_from_dot_file('tree1.dot')
 # graph.write_png(filename+'.png')
 
+#%%
+
+# from sklearn.externals.six import StringIO  
+# from IPython.display import Image  
+# from sklearn.tree import export_graphviz
+# import pydotplus
+# dot_data = StringIO()
+# export_graphviz(tree1, out_file=dot_data,  
+#                 filled=True, rounded=True,
+#                 special_characters=True, feature_names = df2.columns[:-1],class_names=['0','1'])
+# graph = pydotplus.graph_from_dot_data(dot_data.getvalue())  
+# graph.write_png('tree1.png')
+# Image(graph.create_png())
+
+#%%
+# from sklearn import tree
+# tree.plot_tree(tree4,filled=True, rounded=True, feature_names = df2.columns[:-1],class_names=['0','1'])
+# plt.show()
+# # %%
+# from sklearn.tree import export_graphviz  
+# filename = 'tree4'
+# # import os
+# # print(os.getcwd())
+# export_graphviz(tree4, out_file = filename + '.dot' , feature_names =cols.columns) 
 
 # %%
+
