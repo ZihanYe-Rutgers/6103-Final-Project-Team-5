@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from seaborn.palettes import color_palette
 
 #%%
 dirpath = os.getcwd() # print("current directory is : " + dirpath)
@@ -336,8 +337,8 @@ plt.show()
 df3=df.copy()
 replace_map = {'Gender': {'Male': 0,'Female': 1 },
                         'customer_type': {'disloyal Customer': 0,'Loyal Customer': 1},
-                        'type_of_travel': {'Personal Travel': 0,'Business travel': 1},
-                        'customer_class': {'Eco': 0,'Eco Plus': 1 , 'Business': 2},
+                        'type_of_travel': {'Personal Travel': 1,'Business travel': 2},
+                        'customer_class': {'Eco': 1,'Eco Plus': 2 , 'Business': 3},
                         'satisfaction': {'neutral or dissatisfied': 0,'satisfied': 1}
 }
 df3.replace(replace_map, inplace=True)
@@ -389,10 +390,11 @@ print("\nThe second value of the above test output", csq[1],\
 per_sat=table.copy()
 per_sat["total"] = per_sat.sum(axis=1)
 per_sat['satisfaction_rate'] = (per_sat[1]/per_sat['total'])*100
+per_sat['unsatisfaction_rate'] = (per_sat[0]/per_sat['total'])*100
 
 ## plot
-pt=per_sat[['satisfaction_rate']]
-pt.plot(kind='bar')
+pt=per_sat[['satisfaction_rate','unsatisfaction_rate']]
+pt.plot(kind='bar', color=['#00B2FF','#CC3351'])
 plt.title("Age groups satisfaction rates")
 plt.ylabel("Percentage of satisfaction(%)")
 plt.legend()
@@ -401,6 +403,9 @@ plt.show()
 
 
 #%%
+#################################################################################
+# EDA 2
+#################################################################################
 # 1.1. Does arrival/departure have any effect on customer satisfaction?
 # departure_delay_in_minutes - satisfaction
 #%%
@@ -418,5 +423,81 @@ plt.show()
 print("From the correlation matrix it doesn't seems there's much effect on the delays\
  and passenger satisfection. It could be because the delays are mostly not controlled by\
  the airlines but airport or weather condition.")
+
+
+#%%
+#################################################################################
+# EDA 3
+#################################################################################
+# Which ticket class has more satisfaction?
+cc_sat = df3[['customer_class','satisfaction']]
+
+# count plot
+sns.countplot(x ='customer_class',hue='satisfaction', palette=['#B70013','#1200A7'], data = df_vis)
+plt.title("Passenger Travel Class by satisfaction")
+plt.show()
+
+print("Looks like economy class passengers are not that stisfied with the airlines service")
+
+#%%
+table = pd.crosstab(cc_sat.customer_class, cc_sat.satisfaction)
+
+# finding percentage of satisfaction in the groups
+# % of satisfaction = ((no. of satisfied)/(row total saitsfied+unsatisfied)) * 100%
+
+cc_per_sat=table.copy()
+cc_per_sat["total"] = cc_per_sat.sum(axis=1)
+cc_per_sat['satisfaction_rate'] = (cc_per_sat[1]/cc_per_sat['total'])*100
+cc_per_sat['unsatisfaction_rate'] = (cc_per_sat[0]/cc_per_sat['total'])*100
+
+#%%
+## plot
+cc_pt=cc_per_sat[['satisfaction_rate', 'unsatisfaction_rate']]
+cc_pt.plot(kind='bar',color=['#3AB6F5','#CF3057'])
+plt.title("Passenger Satisfaction Rates by Travel Class")
+plt.ylabel("Percentage of Satisfaction(%)")
+plt.legend(bbox_to_anchor=(1.0, 1.0), loc='upper left')
+plt.show()
+
+#%%
+#################################################################################
+# EDA 4
+#################################################################################
+# 1.3. Who are more satisfied? Male or Female?
+
+# count plot
+sns.countplot(x ='Gender',hue='satisfaction', data = df_vis, palette=['#E12C1E','#2780D8'])
+plt.title("Satisfaction by Male/Female")
+plt.legend(bbox_to_anchor=(1.0, 1.0), loc='upper left')
+plt.show()
+
+print("Overall female seems to be less satisfied than men. Now let's explore it by their ages.")
+
+#%%
+mf_sat = df_vis[['Gender','age','satisfaction']]
+mf_sat_ = mf_sat[mf_sat['satisfaction'] == 'satisfied']
+
+# count plot
+sns.kdeplot(
+    data=mf_sat_,
+    x="age", hue="Gender", shade = True,palette=['r','b'],
+)
+plt.title("Satisfied")
+plt.show()
+
+print("Looks like both male and female of same ages are equally satisfied.")
+
+mf_unsat = mf_sat[mf_sat['satisfaction'] == 'neutral or dissatisfied']
+
+# count plot
+sns.kdeplot(
+    data=mf_unsat,
+    x="age", hue="Gender", shade = True,palette=['red','green'],
+)
+plt.title("Neutral or Dissatisfied")
+plt.show()
+
+print("Here looks like more females of age between 20-30 are a bit more unsatisfied than males.")
+
 
 #%%
