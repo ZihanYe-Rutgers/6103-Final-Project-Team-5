@@ -326,7 +326,95 @@ plt.title("Distributuion of cleanliness")
 plt.show()
 
 
+##################################################################################
+# EDA
+##################################################################################
+#%%
+#### 1. Which age group is traveling more frequently and how much satisfied they are?
+### age-satisfaction
+##  making age-group by dividing ages to several intervals
+ag_sat = df3[['age','satisfaction']].copy()
+# ag_sat['age_group'] = pd.cut(ag_sat['age'], 3)
+
+ag_sat['age_group'] = 0
+# manual cut
+bins = pd.IntervalIndex.from_tuples([(0, 10), (11, 20), (21, 30), (31, 40), (41, 50), (51, 60), (61, 70), (71, 80), (81, 90)],
+                                    closed='left')
+age_group = pd.cut(x=ag_sat.age.to_list(),bins=bins)
+age_group.categories = ["0-10", '11-20', '21-30', '31-40','41-50','51-60','61-70','71-80','81-90']
+ag_sat['age_group'] = age_group
+
+#%%
+## Which age group is travelling more?
+# count plot
+sns.countplot(x ='age_group',hue='satisfaction', palette=['r','b'], data = ag_sat)
+plt.title("Age groups by satisfaction")
+plt.show()
+
+print("I looks like most travellers are from age between 21 to 60.\
+ Highest number of travellers are of age 21-30 but most of them are not satisfied.\
+ The second highest travellers are of 41-50 but most of them are stisfied of the airline service. ")
+
 # %%
+## CHI-TEST age-satisfaction
+print("Now I'm going to run a Chi-Squared test of independence to determine whether there\
+ is an association between age_groups and satisfaction.\n")
+
+from scipy.stats import chi2_contingency
+table = pd.crosstab(ag_sat.age_group, ag_sat.satisfaction)
+csq=chi2_contingency(table)
+# print(table)
+print(csq)
+print("\nThe second value of the above test output", csq[1],\
+ "represents the p-value of the test. As evident, the p-value is\
+ less than 0.05 and very significant, hence we reject the null hypothesis that satisfaction is\
+ not associated with age groups and conclude that there is some\
+ relationship between them.")
+
+#%%
+
+# finding percentage of satisfaction in the groups
+# % of satisfaction = ((no. of satisfied)/(row total saitsfied+unsatisfied)) * 100%
+
+per_sat=table.copy()
+per_sat["total"] = per_sat.sum(axis=1)
+per_sat['satisfaction_rate'] = (per_sat[1]/per_sat['total'])*100
+
+## plot
+pt=per_sat[['satisfaction_rate']]
+pt.plot(kind='bar')
+plt.title("Age groups satisfaction rates")
+plt.ylabel("Percentage of satisfaction(%)")
+plt.legend()
+plt.show()
 
 
-# %%
+
+#%%
+# 1.1. Does arrival/departure have any effect on customer satisfaction?
+# departure_delay_in_minutes - satisfaction
+#%%
+df3=df.copy()
+
+replace_map = {'Gender': {'Male': 0,'Female': 1 },
+                        'customer_type': {'disloyal Customer': 0,'Loyal Customer': 1},
+                        'type_of_travel': {'Personal Travel': 0,'Business travel': 1},
+                        'customer_class': {'Eco': 0,'Eco Plus': 1 , 'Business': 2},
+                        'satisfaction': {'neutral or dissatisfied': 0,'satisfied': 1}
+}
+df3.replace(replace_map, inplace=True)
+
+dd_sat = df3[['departure_delay_in_minutes','arrival_delay_in_minutes','satisfaction']]
+
+# mask = np.triu(np.ones_like(dd_sat.corr(), dtype=bool))
+plt.figure(figsize=(6, 6))
+sns.heatmap(dd_sat.corr(), annot=True)
+sns.set_context(font_scale=10)
+plt.title('Relationships between delays and satisfection',fontdict=dict(size=18))
+plt.show()
+
+print("From the correlation matrix it doesn't seems there's much effect on the delays\
+ and passenger satisfection. It could be because the delays are mostly not controlled by\
+ the airlines but airport or weather condition.")
+
+#%%
