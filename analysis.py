@@ -333,6 +333,16 @@ plt.show()
 #### 1. Which age group is traveling more frequently and how much satisfied they are?
 ### age-satisfaction
 ##  making age-group by dividing ages to several intervals
+df3=df.copy()
+replace_map = {'Gender': {'Male': 0,'Female': 1 },
+                        'customer_type': {'disloyal Customer': 0,'Loyal Customer': 1},
+                        'type_of_travel': {'Personal Travel': 0,'Business travel': 1},
+                        'customer_class': {'Eco': 0,'Eco Plus': 1 , 'Business': 2},
+                        'satisfaction': {'neutral or dissatisfied': 0,'satisfied': 1}
+}
+df3.replace(replace_map, inplace=True)
+
+
 ag_sat = df3[['age','satisfaction']].copy()
 # ag_sat['age_group'] = pd.cut(ag_sat['age'], 3)
 
@@ -394,15 +404,7 @@ plt.show()
 # 1.1. Does arrival/departure have any effect on customer satisfaction?
 # departure_delay_in_minutes - satisfaction
 #%%
-df3=df.copy()
 
-replace_map = {'Gender': {'Male': 0,'Female': 1 },
-                        'customer_type': {'disloyal Customer': 0,'Loyal Customer': 1},
-                        'type_of_travel': {'Personal Travel': 0,'Business travel': 1},
-                        'customer_class': {'Eco': 0,'Eco Plus': 1 , 'Business': 2},
-                        'satisfaction': {'neutral or dissatisfied': 0,'satisfied': 1}
-}
-df3.replace(replace_map, inplace=True)
 
 dd_sat = df3[['departure_delay_in_minutes','arrival_delay_in_minutes','satisfaction']]
 
