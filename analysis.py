@@ -53,7 +53,7 @@ print(df_vis.age.describe())
 print(df_vis.age.value_counts())
 # histogram
 sns.histplot(x ='age', data = df_vis)
-plt.title("Distributuion of age")
+plt.title("Distribution of age")
 plt.show()
 
 #%%
@@ -63,7 +63,7 @@ print(df_vis.flight_distance.describe())
 print(df_vis.flight_distance.value_counts())
 # histogram
 sns.histplot(x ='flight_distance', data = df_vis)
-plt.title("Distributuion of flight_distance")
+plt.title("Distribution of flight_distance")
 plt.show()
 
 #%%
@@ -105,7 +105,7 @@ print(df_vis.Gender.value_counts())
 df_vis['Gender'] = pd.Categorical(df_vis['Gender'], ordered=False)
 # count plot
 sns.countplot(x ='Gender', data = df_vis)
-plt.title("Distributuion of Gender")
+plt.title("Distribution of Gender")
 plt.show()
 
 #%%
@@ -118,7 +118,7 @@ print(df_vis.customer_type.value_counts())
 df_vis['customer_type'] = pd.Categorical(df_vis['customer_type'], ordered=False)
 # count plot
 sns.countplot(x ='customer_type', data = df_vis)
-plt.title("Distributuion of customer_type")
+plt.title("Distribution of customer_type")
 plt.show()
 
 #%%
@@ -131,7 +131,7 @@ print(df_vis.type_of_travel.value_counts())
 df_vis['type_of_travel'] = pd.Categorical(df_vis['type_of_travel'], ordered=False)
 # count plot
 sns.countplot(x ='type_of_travel', data = df_vis)
-plt.title("Distributuion of type_of_travel")
+plt.title("Distribution of type_of_travel")
 plt.show()
 
 #%%
@@ -143,7 +143,7 @@ print(df_vis.satisfaction.value_counts())
 df_vis['satisfaction'] = pd.Categorical(df_vis['satisfaction'], ordered=False)
 # count plot
 sns.countplot(x ='satisfaction', data = df_vis)
-plt.title("Distributuion of satisfaction")
+plt.title("Distribution of satisfaction")
 plt.show()
 
 #%%
@@ -157,7 +157,7 @@ print(df_vis.customer_class.value_counts())
 df_vis['customer_class'] = pd.Categorical(df_vis['customer_class'], categories=['Eco', 'Eco Plus', 'Business'], ordered=True)
 # count plot
 sns.countplot(x ='customer_class', data = df_vis)
-plt.title("Distributuion of customer_class")
+plt.title("Distribution of customer_class")
 plt.show()
 
 
@@ -166,7 +166,7 @@ plt.show()
 df_vis['inflight_wifi_service'] = pd.Categorical(df_vis['inflight_wifi_service'], ordered=True)
 # count plot
 sns.countplot(x ='inflight_wifi_service', data = df_vis)
-plt.title("Distributuion of inflight_wifi_service")
+plt.title("Distribution of inflight_wifi_service")
 plt.show()
 
 #%%
@@ -178,7 +178,7 @@ print(df_vis.departure_arrival_time_convenient.value_counts())
 df_vis['departure_arrival_time_convenient'] = pd.Categorical(df_vis['departure_arrival_time_convenient'], ordered=True)
 # count plot
 sns.countplot(x ='departure_arrival_time_convenient', data = df_vis)
-plt.title("Distributuion of departure_arrival_time_convenient")
+plt.title("Distribution of departure_arrival_time_convenient")
 plt.show()
 
 #%%
@@ -190,7 +190,7 @@ print(df_vis.ease_of_online_booking.value_counts())
 df_vis['ease_of_online_booking'] = pd.Categorical(df_vis['ease_of_online_booking'], ordered=True)
 # count plot
 sns.countplot(x ='ease_of_online_booking', data = df_vis)
-plt.title("Distributuion of ease_of_online_booking")
+plt.title("Distribution of ease_of_online_booking")
 plt.show()
 
 #%%
@@ -202,7 +202,7 @@ print(df_vis.gate_location.value_counts())
 df_vis['gate_location'] = pd.Categorical(df_vis['gate_location'], ordered=True)
 # count plot
 sns.countplot(x ='gate_location', data = df_vis)
-plt.title("Distributuion of gate_location")
+plt.title("Distribution of gate_location")
 plt.show()
 
 #%%
@@ -215,7 +215,7 @@ print(df_vis.food_and_drink.value_counts())
 df_vis['food_and_drink'] = pd.Categorical(df_vis['food_and_drink'], ordered=True)
 # count plot
 sns.countplot(x ='food_and_drink', data = df_vis)
-plt.title("Distributuion of food_and_drink")
+plt.title("Distribution of food_and_drink")
 plt.show()
 
 #%%
@@ -227,7 +227,7 @@ print(df_vis.online_boarding.value_counts())
 df_vis['online_boarding'] = pd.Categorical(df_vis['online_boarding'], ordered=True)
 # count plot
 sns.countplot(x ='online_boarding', data = df_vis)
-plt.title("Distributuion of online_boarding")
+plt.title("Distribution of online_boarding")
 plt.show()
 
 #%%
@@ -239,7 +239,7 @@ print(df_vis.seat_comfort.value_counts())
 df_vis['seat_comfort'] = pd.Categorical(df_vis['seat_comfort'], ordered=True)
 # count plot
 sns.countplot(x ='seat_comfort', data = df_vis)
-plt.title("Distributuion of seat_comfort")
+plt.title("Distribution of seat_comfort")
 plt.show()
 
 #%%
@@ -251,7 +251,7 @@ print(df_vis.inflight_entertainment.value_counts())
 df_vis['inflight_entertainment'] = pd.Categorical(df_vis['inflight_entertainment'], ordered=True)
 # count plot
 sns.countplot(x ='inflight_entertainment', data = df_vis)
-plt.title("Distributuion of inflight_entertainment")
+plt.title("Distribution of inflight_entertainment")
 plt.show()
 
 #%%
@@ -264,7 +264,7 @@ print(df_vis.onboard_service.value_counts())
 df_vis['onboard_service'] = pd.Categorical(df_vis['onboard_service'], ordered=True)
 # count plot
 sns.countplot(x ='onboard_service', data = df_vis)
-plt.title("Distributuion of onboard_service")
+plt.title("Distribution of onboard_service")
 plt.show()
 
 #%%
@@ -276,7 +276,7 @@ print(df_vis.leg_room_service.value_counts())
 df_vis['leg_room_service'] = pd.Categorical(df_vis['leg_room_service'], ordered=True)
 # count plot
 sns.countplot(x ='leg_room_service', data = df_vis)
-plt.title("Distributuion of leg_room_service")
+plt.title("Distribution of leg_room_service")
 plt.show()
 
 #%%
@@ -288,7 +288,7 @@ print(df_vis.baggage_handling.value_counts())
 df_vis['baggage_handling'] = pd.Categorical(df_vis['baggage_handling'], ordered=True)
 # count plot
 sns.countplot(x ='baggage_handling', data = df_vis)
-plt.title("Distributuion of baggage_handling")
+plt.title("Distribution of baggage_handling")
 plt.show()
 
 #%%
@@ -300,7 +300,7 @@ print(df_vis.checkin_service.value_counts())
 df_vis['checkin_service'] = pd.Categorical(df_vis['checkin_service'], ordered=True)
 # count plot
 sns.countplot(x ='checkin_service', data = df_vis)
-plt.title("Distributuion of checkin_service")
+plt.title("Distribution of checkin_service")
 plt.show()
 
 #%%
@@ -312,7 +312,7 @@ print(df_vis.inflight_service.value_counts())
 df_vis['inflight_service'] = pd.Categorical(df_vis['inflight_service'], ordered=True)
 # count plot
 sns.countplot(x ='inflight_service', data = df_vis)
-plt.title("Distributuion of inflight_service")
+plt.title("Distribution of inflight_service")
 plt.show()
 #%%
 # cleanliness - ordered categorical
@@ -323,7 +323,7 @@ print(df_vis.cleanliness.value_counts())
 df_vis['cleanliness'] = pd.Categorical(df_vis['cleanliness'], ordered=True)
 # count plot
 sns.countplot(x ='cleanliness', data = df_vis)
-plt.title("Distributuion of cleanliness")
+plt.title("Distribution of cleanliness")
 plt.show()
 
 
