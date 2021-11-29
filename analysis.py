@@ -358,7 +358,55 @@ print("From the correlation matrix it doesn't seems there's much effect on the d
  the airlines but airport or weather condition.")
 
 #### more from Zihan Ye
+categorical_features=df.copy()
+replace_map = {'Gender': {'Male': 0,'Female': 1 },
+                        'customer_type': {'disloyal Customer': 0,'Loyal Customer': 1},
+                        'type_of_travel': {'Personal Travel': 0,'Business travel': 1},
+                        'customer_class': {'Eco': 0,'Eco Plus': 1 , 'Business': 2},
+                        'satisfaction': {'neutral or dissatisfied': 0,'satisfied': 1}
+}
 
+categorical_features.replace(replace_map, inplace=True)
+print(categorical_features.dtypes)
+
+corr_categorical = categorical_features.corr()
+ax2 = plt.subplots(figsize=(10,10))
+ax2 = sns.heatmap(corr_categorical,annot=True,annot_kws={"fontsize":8})
+sns.set_context(font_scale=10)
+plt.title('Relationships between categorical features')
+plt.show()
+
+# departure_delay_in_minutes - satisfaction
+dep_sat = df[['departure_delay_in_minutes','satisfaction']].copy()
+dep_sat
+# %%
+dep_sat = df[['departure_delay_in_minutes','satisfaction']].copy()
+
+dep_sat['dep_group'] = 0
+# manual cut
+bins = pd.IntervalIndex.from_tuples([(0,0.9), (1, 30), (31, 60), (61, 1600)],closed='left')
+dep_group = pd.cut(x=dep_sat.departure_delay_in_minutes.to_list(),bins=bins)
+dep_group.categories = ['0', '1-30', '31-60','>60']
+dep_sat['dep_group'] = dep_group
+dep_sat
+# %%
+sns.countplot(x='dep_group', hue='satisfaction', data=dep_sat)
+
+# %% arrival_delay_in_minutes - satisfaction
+arr_sat = df[['arrival_delay_in_minutes','satisfaction']].copy()
+arr_sat
+# %%
+arr_sat = df[['arrival_delay_in_minutes','satisfaction']].copy()
+
+arr_sat['arr_group'] = 0
+# manual cut
+bins = pd.IntervalIndex.from_tuples([(0,0.9), (1, 30), (31, 60), (61, 1600)],closed='left')
+arr_group = pd.cut(x=arr_sat.arrival_delay_in_minutes.to_list(),bins=bins)
+arr_group.categories = ['0', '1-30', '31-60','>60']
+arr_sat['arr_group'] = arr_group
+arr_sat
+# %%
+sns.countplot(x='arr_group', hue='satisfaction', data=arr_sat)
 
 ##################################################################################
 # EDA 2
