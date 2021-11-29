@@ -6,6 +6,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from seaborn.palettes import color_palette
+plt.style.use('fivethirtyeight')
 
 #%%
 dirpath = os.getcwd() # print("current directory is : " + dirpath)
@@ -400,6 +401,9 @@ plt.ylabel("Percentage of satisfaction(%)")
 plt.legend()
 plt.show()
 
+print("The highest rate of neutral/dissatisfaction is from children groups. Even though airplane isn't a child friendly\
+ place but airlines should find some way to improve their satisfaction. On the other side, 70+ aged passengers are\
+ also having a great percentage of dissatisfaction. Airlines should take a look at them as well.")
 
 
 #%%
@@ -408,7 +412,7 @@ plt.show()
 #################################################################################
 # 1.1. Does arrival/departure have any effect on customer satisfaction?
 # departure_delay_in_minutes - satisfaction
-#%%
+#
 
 
 dd_sat = df3[['departure_delay_in_minutes','arrival_delay_in_minutes','satisfaction']]
@@ -424,12 +428,15 @@ print("From the correlation matrix it doesn't seems there's much effect on the d
  and passenger satisfection. It could be because the delays are mostly not controlled by\
  the airlines but airport or weather condition.")
 
+#### more from Zihan Ye
 
 #%%
 #################################################################################
 # EDA 3
 #################################################################################
 # Which ticket class has more satisfaction?
+# 
+
 cc_sat = df3[['customer_class','satisfaction']]
 
 # count plot
@@ -440,6 +447,7 @@ plt.show()
 print("Looks like economy class passengers are not that stisfied with the airlines service")
 
 #%%
+
 table = pd.crosstab(cc_sat.customer_class, cc_sat.satisfaction)
 
 # finding percentage of satisfaction in the groups
@@ -458,6 +466,11 @@ plt.title("Passenger Satisfaction Rates by Travel Class")
 plt.ylabel("Percentage of Satisfaction(%)")
 plt.legend(bbox_to_anchor=(1.0, 1.0), loc='upper left')
 plt.show()
+
+print("Here we can see, around 80% economy class passengers are not so satisfied and\
+ more than 70% Business class passengers are mostly satisfied.\
+ Also, as we observed before, economy plus passengers are least in numbers but now we can see only less than 30% of them are satisfied.\
+ Airlines needs to make economy class better also improve themself more to satisfy business passengers as well because they are paying more than others")
 
 #%%
 #################################################################################
@@ -499,5 +512,24 @@ plt.show()
 
 print("Here looks like more females of age between 20-30 are a bit more unsatisfied than males.")
 
+
+#%%
+
+############################################################################################################
+# Exploring through classification and modeliing                                                           #
+############################################################################################################
+
+# 1. What are the factors that satisfy the passenger?
+
+
+#%%
+
+############################################################################################################
+# Exploring through classification and modeliing                                                           #
+############################################################################################################
+
+# 2. What factors have a strong correlation to loyal customers? 
+
+# (Jinbo part)
 
 #%%
