@@ -492,7 +492,7 @@ import os
 print(os.getcwd())
 export_graphviz(tree8, out_file = filename + '.dot' , feature_names =cols.columns) 
 
-# #%%
+#%%
 import pydot
 (graph,) = pydot.graph_from_dot_file('tree8.dot')
 graph.write_png(filename+'.png')
