@@ -321,6 +321,50 @@ plt.title("Distributuion of cleanliness")
 plt.show()
 
 
+
+#%% Zihan Ye: Analysis of satisfaction and flight distance
+sns.boxplot(x="satisfaction",y="flight_distance",data=df_vis, orient='v' )
+plt.show()
+
+#%% Correlation plot of numeric variables 
+
+numerical_features =df[['age','flight_distance','departure_delay_in_minutes','arrival_delay_in_minutes']]
+corr_numerical = numerical_features.corr()
+
+ax2 = sns.heatmap(corr_numerical,annot=True)
+sns.set_context(font_scale=10)
+plt.title('Relationships between numerical features')
+plt.show()
+
+#%% Correlation plot of categorical variables
+categorical_features =df[['inflight_wifi_service','departure_arrival_time_convenient','ease_of_online_booking',
+                          'gate_location','food_and_drink','online_boarding','seat_comfort','inflight_entertainment',
+                          'onboard_service','leg_room_service','baggage_handling','checkin_service','inflight_service',
+                          'cleanliness','customer_type','satisfaction']]
+
+def cleanDfCusType(row, colname): 
+  thisamt = row[colname]
+  if (thisamt == "Loyal Customer"): return 1
+  if (thisamt == "disloyal Customer"): return 2
+
+def cleanDfSat(row, colname): 
+  thisamt = row[colname]
+  if (thisamt == "satisfied"): return 1
+  if (thisamt == "neutral or dissatisfied"): return 2
+
+categorical_features['customer_type'] = df.apply(cleanDfCusType, colname='customer_type', axis=1)
+categorical_features['satisfaction'] = df.apply(cleanDfSat, colname='satisfaction', axis=1)
+print(categorical_features.dtypes)
+
+corr_categorical = categorical_features.corr()
+
+ax2 = sns.heatmap(corr_categorical,annot=True, annot_kws={"fontsize":5})
+sns.set_context(font_scale=10)
+plt.title('Relationships between categorical features')
+plt.show()
+
+#%%
+categorical_features
 # %% Then we will dod logistic regression and some prediction models to analyze numeric varibales.
 import numpy as np
 import pandas as pd
@@ -349,4 +393,47 @@ print(modelpredicitons1.shape)
 print( modelpredicitons1)
 # %%
 
+#%%
+#################################################################################
+# EDA 2
+#################################################################################
+# 1.1. Does arrival/departure have any effect on customer satisfaction?
+# departure_delay_in_minutes - satisfaction
+dep_sat = df[['departure_delay_in_minutes','satisfaction']].copy()
+dep_sat
+# %%
+dep_sat = df[['departure_delay_in_minutes','satisfaction']].copy()
+
+dep_sat['dep_group'] = 0
+# manual cut
+bins = pd.IntervalIndex.from_tuples([(0,0.9), (1, 30), (31, 60), (61, 1600)],closed='left')
+dep_group = pd.cut(x=dep_sat.departure_delay_in_minutes.to_list(),bins=bins)
+dep_group.categories = ['0', '1-30', '31-60','>60']
+dep_sat['dep_group'] = dep_group
+dep_sat
+# %%
+sns.countplot(x='dep_group', hue='satisfaction', data=dep_sat)
+
+
+
+
+
+
+# %% arrival_delay_in_minutes - satisfaction
+arr_sat = df[['arrival_delay_in_minutes','satisfaction']].copy()
+arr_sat
+# %%
+arr_sat = df[['arrival_delay_in_minutes','satisfaction']].copy()
+
+arr_sat['arr_group'] = 0
+# manual cut
+bins = pd.IntervalIndex.from_tuples([(0,0.9), (1, 30), (31, 60), (61, 1600)],closed='left')
+arr_group = pd.cut(x=arr_sat.arrival_delay_in_minutes.to_list(),bins=bins)
+arr_group.categories = ['0', '1-30', '31-60','>60']
+arr_sat['arr_group'] = arr_group
+arr_sat
+# %%
+sns.countplot(x='arr_group', hue='satisfaction', data=arr_sat)
+# %%
+df.departure_delay_in_minutes.max()
 # %%
