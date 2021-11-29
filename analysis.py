@@ -327,12 +327,44 @@ sns.countplot(x ='cleanliness', data = df_vis)
 plt.title("Distribution of cleanliness")
 plt.show()
 
+#%%
+#################################################################################
+# EDA 1 Zihan YE
+#################################################################################
+# 1.1. Does arrival/departure have any effect on customer satisfaction?
+# departure_delay_in_minutes - satisfaction
+#
+df3=df.copy()
+replace_map = {'Gender': {'Male': 0,'Female': 1 },
+                        'customer_type': {'disloyal Customer': 0,'Loyal Customer': 1},
+                        'type_of_travel': {'Personal Travel': 1,'Business travel': 2},
+                        'customer_class': {'Eco': 1,'Eco Plus': 2 , 'Business': 3},
+                        'satisfaction': {'neutral or dissatisfied': 0,'satisfied': 1}
+}
+df3.replace(replace_map, inplace=True)
+
+
+
+dd_sat = df3[['departure_delay_in_minutes','arrival_delay_in_minutes','satisfaction']]
+
+plt.figure(figsize=(6, 6))
+sns.heatmap(dd_sat.corr(), annot=True)
+sns.set_context(font_scale=10)
+plt.title('Relationships between delays and satisfection',fontdict=dict(size=18))
+plt.show()
+
+print("From the correlation matrix it doesn't seems there's much effect on the delays\
+ and passenger satisfection. It could be because the delays are mostly not controlled by\
+ the airlines but airport or weather condition.")
+
+#### more from Zihan Ye
+
 
 ##################################################################################
-# EDA
+# EDA 2
 ##################################################################################
 #%%
-#### 1. Which age group is traveling more frequently and how much satisfied they are?
+#### 1.2. Which age group is traveling more frequently and how much satisfied they are?
 ### age-satisfaction
 ##  making age-group by dividing ages to several intervals
 df3=df.copy()
@@ -357,7 +389,12 @@ age_group.categories = ["0-10", '11-20', '21-30', '31-40','41-50','51-60','61-70
 ag_sat['age_group'] = age_group
 
 #%%
-## Which age group is travelling more?
+
+##################################################################################
+# EDA 3
+##################################################################################
+
+## 1.3. Which age group is travelling more?
 # count plot
 sns.countplot(x ='age_group',hue='satisfaction', palette=['r','b'], data = ag_sat)
 plt.title("Age groups by satisfaction")
@@ -406,35 +443,12 @@ print("The highest rate of neutral/dissatisfaction is from children groups. Even
  also having a great percentage of dissatisfaction. Airlines should take a look at them as well.")
 
 
-#%%
-#################################################################################
-# EDA 2
-#################################################################################
-# 1.1. Does arrival/departure have any effect on customer satisfaction?
-# departure_delay_in_minutes - satisfaction
-#
-
-
-dd_sat = df3[['departure_delay_in_minutes','arrival_delay_in_minutes','satisfaction']]
-
-# mask = np.triu(np.ones_like(dd_sat.corr(), dtype=bool))
-plt.figure(figsize=(6, 6))
-sns.heatmap(dd_sat.corr(), annot=True)
-sns.set_context(font_scale=10)
-plt.title('Relationships between delays and satisfection',fontdict=dict(size=18))
-plt.show()
-
-print("From the correlation matrix it doesn't seems there's much effect on the delays\
- and passenger satisfection. It could be because the delays are mostly not controlled by\
- the airlines but airport or weather condition.")
-
-#### more from Zihan Ye
 
 #%%
 #################################################################################
-# EDA 3
+# EDA 4
 #################################################################################
-# Which ticket class has more satisfaction?
+# 1.4. Which ticket class has more satisfaction?
 # 
 
 cc_sat = df3[['customer_class','satisfaction']]
@@ -474,9 +488,9 @@ print("Here we can see, around 80% economy class passengers are not so satisfied
 
 #%%
 #################################################################################
-# EDA 4
+# EDA 5
 #################################################################################
-# 1.3. Who are more satisfied? Male or Female?
+# 1.5. Who are more satisfied? Male or Female?
 
 # count plot
 sns.countplot(x ='Gender',hue='satisfaction', data = df_vis, palette=['#E12C1E','#2780D8'])
@@ -520,7 +534,7 @@ print("Here looks like more females of age between 20-30 are a bit more unsatisf
 ############################################################################################################
 
 # 1. What are the factors that satisfy the passenger?
-
+# (Nawshin parts)
 
 #%%
 
