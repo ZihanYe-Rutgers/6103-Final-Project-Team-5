@@ -1172,48 +1172,48 @@ print("Now online boarding by itself covering the major importance of more than 
 
 # 2. What factors mostly lead to loyal customers? 
 
+print("Now we want to find out the loyal customers. We are again doing decision tree\
+ classifier to find what features make loyal customers.")
 
-
-#%%
-import os
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
+# #%%
+# import os
+# import numpy as np
+# import pandas as pd
+# import matplotlib.pyplot as plt
+# import seaborn as sns
 from sklearn.model_selection import cross_val_score
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import confusion_matrix 
-from sklearn.metrics import classification_report
-from sklearn.tree import DecisionTreeClassifier
-from sklearn import tree
-from sklearn.tree import export_graphviz  
+# from sklearn.model_selection import train_test_split
+# from sklearn.metrics import accuracy_score
+# from sklearn.metrics import confusion_matrix 
+# from sklearn.metrics import classification_report
+# from sklearn.tree import DecisionTreeClassifier
+# from sklearn import tree
+# from sklearn.tree import export_graphviz  
 
 
-#%%
-dirpath = os.getcwd() 
-filepath = os.path.join( dirpath ,'airline_passenger_satisfaction.csv')
-df = pd.read_csv(filepath, index_col=[0]) 
+# #%%
+# dirpath = os.getcwd() 
+# filepath = os.path.join( dirpath ,'airline_passenger_satisfaction.csv')
+# df = pd.read_csv(filepath, index_col=[0]) 
 
 
-# %%
-print("data shape: ")
-df.shape
-df.dtypes
+# # %%
+# print("data shape: ")
+# df.shape
+# df.dtypes
 
 
-# %%
-#df.describe()
-df.head()
+# # %%
+# #df.describe()
+# df.head()
 
-# %%
-#check na values and delete na values
-df.isnull().sum()
-df=df.dropna()
+# # %%
+# #check na values and delete na values
+# df.isnull().sum()
+# df=df.dropna()
 
 # %%
 # smart question 3: What factors have a strong correlation to loyal customers? 
-print(" We are also starting with decision tree model to find out the answer.")
 
 # We need to change some categorical variables to numerical variables for the model. 
 df2=df.copy()
