@@ -62,7 +62,7 @@ x = cols.values
 y = df2['satisfaction'].values
 
 # Train-Test split
-x_train, x_test, y_train, y_test = train_test_split (x, y, test_size=0.2, random_state=1)
+x_train, x_test, y_train, y_test = train_test_split (x, y, test_size=0.2, random_state=44)
 print("The training data size is : {} ".format(x_train.shape))
 print("The test data size is : {} ".format(x_test.shape))
 
@@ -74,7 +74,7 @@ from sklearn.metrics import classification_report
 #Decision Tree Classifier
 from sklearn.tree import DecisionTreeClassifier
 # Instantiate dtree
-tree1 = DecisionTreeClassifier(max_depth=None,criterion='entropy')
+tree1 = DecisionTreeClassifier(max_depth=None,criterion='entropy',class_weight='balanced')
 # Fit dt to the training set
 clf = tree1.fit(x_train,y_train)
 y_train_pred = tree1.predict(x_train)
@@ -98,7 +98,7 @@ print("Classification report: \n ",classification_report(y_test, y_test_pred))
 print ('Tree Depth:', tree1.get_depth())
 print ('Tree Leaves:', tree1.get_n_leaves())
 
-print("The test accuracy is 100% but the train set accuracy is around 95%. \
+print("The train accuracy is 100% but the test set accuracy is around 95%. \
  The tree has too many featues. Let's find out the which features have more importance.")
 
 #%%
@@ -143,14 +143,14 @@ cols = df2[['online_boarding', 'inflight_wifi_service', 'type_of_travel', 'infli
 x = cols.values
 y = df2['satisfaction'].values
 
-x_train, x_test, y_train, y_test = train_test_split (x, y, test_size=0.2, random_state=1)
+x_train, x_test, y_train, y_test = train_test_split (x, y, test_size=0.2, random_state=44)
 print("The training data size is : {} ".format(x_train.shape))
 print("The test data size is : {} ".format(x_test.shape))
 
 #%%
 
 # Instantiate dtree
-tree2 = DecisionTreeClassifier(max_depth=None,criterion='entropy')
+tree2 = DecisionTreeClassifier(max_depth=None,criterion='entropy',class_weight='balanced')
 # Fit dt to the training set
 clf2 = tree2.fit(x_train,y_train)
 y_train_pred = tree2.predict(x_train)
@@ -174,7 +174,7 @@ print("Classification report:\n",classification_report(y_test, y_test_pred))
 print ('Tree Depth:', tree2.get_depth())
 print ('Tree Leaves:', tree2.get_n_leaves())
 
-print("The test accuracy is 93.8% and the train set accuracy is around 93.6%. \
+print("The test accuracy is 93.6% and the train set accuracy is around 93.8%. \
  It means it is a good model.")
 #%%
 # Get most important tree features
@@ -231,14 +231,14 @@ cols = df2[['inflight_wifi_service', 'departure_arrival_time_convenient', 'ease_
 x = cols.values
 y = df2['satisfaction'].values
 
-x_train, x_test, y_train, y_test = train_test_split (x, y, test_size=0.2, random_state=1)
+x_train, x_test, y_train, y_test = train_test_split (x, y, test_size=0.2, random_state=44)
 print("The training data size is : {} ".format(x_train.shape))
 print("The test data size is : {} ".format(x_test.shape))
 
 #%%
 
 # Instantiate dtree
-tree3 = DecisionTreeClassifier(max_depth=None,criterion='entropy')
+tree3 = DecisionTreeClassifier(max_depth=None,criterion='entropy',class_weight='balanced')
 # Fit dt to the training set
 clf3 = tree3.fit(x_train,y_train)
 y_train_pred = tree3.predict(x_train)
@@ -310,14 +310,14 @@ cols = df2[['inflight_wifi_service', 'departure_arrival_time_convenient', 'onlin
 x = cols.values
 y = df2['satisfaction'].values
 
-x_train, x_test, y_train, y_test = train_test_split (x, y, test_size=0.2, random_state=1)
+x_train, x_test, y_train, y_test = train_test_split (x, y, test_size=0.2, random_state=44)
 print("The training data size is : {} ".format(x_train.shape))
 print("The test data size is : {} ".format(x_test.shape))
 
 #%%
 
 # Instantiate dtree
-tree4 = DecisionTreeClassifier(max_depth=None,criterion='entropy')
+tree4 = DecisionTreeClassifier(max_depth=None,criterion='entropy',class_weight='balanced')
 # Fit dt to the training set
 clf4 = tree4.fit(x_train,y_train)
 y_train_pred = tree4.predict(x_train)
@@ -341,7 +341,7 @@ print("Classification report:\n",classification_report(y_test, y_test_pred))
 print ('Tree Depth:', tree4.get_depth())
 print ('Tree Leaves:', tree4.get_n_leaves())
 
-print("The train accuracy is 91.88% but the test set accuracy is around 91.45%. \
+print("The train accuracy is 91.84% but the test set accuracy is around 90.9%. \
  So our leading 5 parameters can predict both the training and test sets to about 91% accuracy,\
  with tree depth 18, and only 177 leaves.")
 
@@ -383,21 +383,21 @@ Together they are covering more than 70% of importance. ")
 # TREE 5
 ############################################################################
 
-print("Now we are making a final tree with depth 3.")
+print("Now we are making a final tree with depth 3 just for visualization purpose.")
 
 # cols = df2[['inflight_wifi_service', 'departure_arrival_time_convenient', 'gate_location', 'online_boarding', 'inflight_entertainment', 'onboard_service','leg_room_service','baggage_handling','checkin_service', 'cleanliness']]
 cols = df2[['inflight_wifi_service', 'departure_arrival_time_convenient', 'online_boarding', 'inflight_entertainment', 'leg_room_service']]
 x = cols.values
 y = df2['satisfaction'].values
 
-x_train, x_test, y_train, y_test = train_test_split (x, y, test_size=0.2, random_state=1)
+x_train, x_test, y_train, y_test = train_test_split (x, y, test_size=0.2, random_state=44)
 print("The training data size is : {} ".format(x_train.shape))
 print("The test data size is : {} ".format(x_test.shape))
 
 #%%
 
 # Instantiate dtree
-tree5 = DecisionTreeClassifier(max_depth=3,criterion='entropy')
+tree5 = DecisionTreeClassifier(max_depth=3,criterion='entropy',class_weight='balanced')
 # Fit dt to the training set
 clf5 = tree5.fit(x_train,y_train)
 y_train_pred = tree5.predict(x_train)
@@ -421,9 +421,9 @@ print("Classification report:\n",classification_report(y_test, y_test_pred))
 print ('Tree Depth:', tree5.get_depth())
 print ('Tree Leaves:', tree5.get_n_leaves())
 
-print("The train accuracy is 84.35% but the test set accuracy is around 84.22%. \
- So our leading 5 parameters can predict both the training and test sets to about 84% accuracy,\
- with tree depth 3, and only 8 leaves.")
+print("The train accuracy is 84.4% but the test set accuracy is around 83.8%. \
+ So our leading 4 parameters can predict both the training and test sets to about 84% accuracy,\
+ with tree depth 3, and only 8 leaves. But overall, this isn't a good model to predict accurately.")
 
 
 #%%
@@ -453,7 +453,27 @@ plt.title('Features sorted by importance:')
 plt.ylabel("Percentage of Importance(%)")
 plt.xticks(rotation=90)
 plt.show()
-print("Now online boarding covering the major importance of more than 50% alone.")
+print("Now online boarding by itself covering the major importance of more than 50% alone.")
+
+
+#%%[markdown]
+# 
+
+
+# While precision refers to the percentage of our results which are relevant,
+# recall refers to the percentage of total relevant results correctly classified by our algorithm.
+# Under this paradigm, having high Precision will be more important for our business
+# problem. To correctly identify the crucial factors leading to customer satisfaction,
+# the model prediction of the positive class, ‘Satisfied’ needs to be very reliable.
+#
+# For that we think the best decision tree would be the one with 5 most important features
+# It has 89% test precision and 91% recall rate.
+#
+# The most important features to focous on is Online Boarding and Inflight Wi-Fi service.
+# Moreover, as we found out before these 2 features aren't having good average rating as well.
+# Online boarding rating is 3.25 and Inflight Wi-Fi is having only 2.73 ratings.
+#
+# So Airlines should focus on these 2 features at first to get better customer satisfaction.
 
 #%%
 ################################################################################################
@@ -473,31 +493,3 @@ print("Now online boarding covering the major importance of more than 50% alone.
 # import pydot
 # (graph,) = pydot.graph_from_dot_file('tree1.dot')
 # graph.write_png(filename+'.png')
-
-#%%
-
-# from sklearn.externals.six import StringIO  
-# from IPython.display import Image  
-# from sklearn.tree import export_graphviz
-# import pydotplus
-# dot_data = StringIO()
-# export_graphviz(tree1, out_file=dot_data,  
-#                 filled=True, rounded=True,
-#                 special_characters=True, feature_names = df2.columns[:-1],class_names=['0','1'])
-# graph = pydotplus.graph_from_dot_data(dot_data.getvalue())  
-# graph.write_png('tree1.png')
-# Image(graph.create_png())
-
-#%%
-# from sklearn import tree
-# tree.plot_tree(tree4,filled=True, rounded=True, feature_names = df2.columns[:-1],class_names=['0','1'])
-# plt.show()
-# # %%
-# from sklearn.tree import export_graphviz  
-# filename = 'tree4'
-# # import os
-# # print(os.getcwd())
-# export_graphviz(tree4, out_file = filename + '.dot' , feature_names =cols.columns) 
-
-# %%
-
