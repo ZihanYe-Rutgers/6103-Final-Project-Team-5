@@ -982,6 +982,10 @@ plot_cross_validation_on_trees(sm_tree_depths, sm_cv_scores_mean, sm_cv_scores_s
 # TREE 6
 ############################################################################
 
+# We can see from the picture above, when depth is 8, it achieves a high average accuracy score. From depth 13, the score is almost same and there is not much improvements
+# in average accuracy score from depth 8 to depth 13. And importantly, in depth 8, the lower bound of the confidence interval of the accuracy is high enough to make the value significant.
+# So I choose depth 8 to build the model. 
+
 print("Now we are making a final tree with depth 8.")
 
 cols = df2[['departure_arrival_time_convenient', 'ease_of_online_booking', 'online_boarding', 'gate_location', 'checkin_service']]
