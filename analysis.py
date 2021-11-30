@@ -371,6 +371,7 @@ ax2 = sns.heatmap(corr_numerical,annot=True)
 sns.set_context(font_scale=10)
 plt.title('Relationships between numerical features')
 plt.show()
+#This is about numerical correlation.
 #%%
 ################Categorical correlation
 categorical_features=df.copy()
@@ -390,13 +391,13 @@ ax2 = sns.heatmap(corr_categorical,annot=True,annot_kws={"fontsize":8})
 sns.set_context(font_scale=10)
 plt.title('Relationships between categorical features')
 plt.show()
+#This is correlation matrix and heatmap of categorical variables
 #%%
 #########################departure_delay_in_minutes - satisfaction
 dep_sat = df[['departure_delay_in_minutes','satisfaction']].copy()
 dep_sat
 # %%
 dep_sat = df[['departure_delay_in_minutes','satisfaction']].copy()
-
 dep_sat['dep_group'] = 0
 # manual cut
 bins = pd.IntervalIndex.from_tuples([(0,0.9), (1, 30), (31, 60), (61, 1600)],closed='left')
@@ -406,6 +407,11 @@ dep_sat['dep_group'] = dep_group
 dep_sat
 # %%
 sns.countplot(x='dep_group', hue='satisfaction', data=dep_sat)
+# For this step, firstly I divided departure delay time into four groups which are not delay, shorter than half an hour, between 30 to 60 minutes, and longer than 1 hour.
+# Then I did barplot to show the proportion of passenger's satisfaction in each branch.
+# I found that in each branch the proportion is similar, so which means departure is influencital factor. 
+# The reason is mentioned in correlation matrix. Delay may be caused by extreme weather. Extreme weather will cause many flight delays in the airport, not only this flight.
+# So majority of people know that it is not airplines' fault to delay the flight. 
 #%%
 ############################# arrival_delay_in_minutes - satisfaction
 arr_sat = df[['arrival_delay_in_minutes','satisfaction']].copy()
@@ -422,6 +428,7 @@ arr_sat['arr_group'] = arr_group
 arr_sat
 # %%
 sns.countplot(x='arr_group', hue='satisfaction', data=arr_sat)
+# Same as departure delay time part. 
 
 ##################################################################################
 # EDA 2
