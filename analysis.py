@@ -605,7 +605,7 @@ print("Here looks like more females of age between 20-30 are a bit more unsatisf
 # Exploring through classification and modeliing                                                           #
 ############################################################################################################
 
-# 2. What factors have a strong correlation to loyal customers? 
+# 2. What factors mostly lead to loyal customers? 
 
 # (Jinbo part)
 
