@@ -200,7 +200,7 @@ print("Classification report:\n",classification_report(y_test, y_test_pred))
 # Tree depth & leafs
 print ('Tree Depth:', tree3.get_depth())
 print ('Tree Leaves:', tree3.get_n_leaves())
-print("The test accuracy is 86.26% but the train set accuracy is around 99.29%. \
+print("The test accuracy is 86.21% but the train set accuracy is around 99.29%. \
  The tree has too many featues. Let's find out the which features have more importance.")
 
 #%%
@@ -252,7 +252,7 @@ print("Classification report:\n",classification_report(y_test, y_test_pred))
 # Tree depth & leafs
 print ('Tree Depth:', tree4.get_depth())
 print ('Tree Leaves:', tree4.get_n_leaves())
-print("The test accuracy is 88.35% but the train set accuracy is around 90.10%.")
+print("The test accuracy is 88.34% but the train set accuracy is around 90.10%.")
 
 #%%
 # Get most important tree features
@@ -262,6 +262,7 @@ leading_indices = (-importances).argsort()[:6]
 print ("Features sorted by importance:")
 for i in range (6):
     print (i+1, features[leading_indices[i]], round(100*importances[leading_indices[i]],2), '%')
+
 
 #%%
 ############################################################################
@@ -315,6 +316,8 @@ for i in range (5):
 
 
 #%%
+# Find depth via Cross-Validation
+
 def run_cross_validation_on_trees(x, y, tree_depths, cv=5, scoring='accuracy'):
     cv_scores_list = []
     cv_scores_std = []
@@ -354,46 +357,15 @@ plot_cross_validation_on_trees(sm_tree_depths, sm_cv_scores_mean, sm_cv_scores_s
                                'Accuracy per decision tree depth on training data')
 
 
-#%%
-idx_max = sm_cv_scores_mean.argmax()
-sm_best_tree_depth = sm_tree_depths[idx_max]
-sm_best_tree_cv_score = sm_cv_scores_mean[idx_max]
-sm_best_tree_cv_score_std = sm_cv_scores_std[idx_max]
-print('The depth-{} tree achieves the best mean cross-validation accuracy {} +/- {}% on training dataset'.format(
-      sm_best_tree_depth, round(sm_best_tree_cv_score*100,5), round(sm_best_tree_cv_score_std*100, 5)))
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#%%
 #%%
 ############################################################################
 # TREE 6
 ############################################################################
 
-# tree with top 4 important features
-print("From here let's build a new model with the top 4 important features.")
+print("Now we are making a final tree with depth 8.")
 
-cols = df2[['departure_arrival_time_convenient', 'ease_of_online_booking', 'online_boarding', 'gate_location']]
+cols = df2[['departure_arrival_time_convenient', 'ease_of_online_booking', 'online_boarding', 'gate_location', 'checkin_service']]
 x = cols.values
 y = df2['customer_type'].values
 
@@ -402,7 +374,7 @@ print("The training data size is : {} ".format(x_train.shape))
 print("The test data size is : {} ".format(x_test.shape))
 
 #%%
-tree6 = DecisionTreeClassifier(max_depth=None,criterion='entropy')
+tree6 = DecisionTreeClassifier(max_depth=8,criterion='entropy')
 
 clf6 = tree6.fit(x_train,y_train)
 y_train_pred = tree6.predict(x_train)
@@ -424,236 +396,20 @@ print("Classification report:\n",classification_report(y_test, y_test_pred))
 # Tree depth & leafs
 print ('Tree Depth:', tree6.get_depth())
 print ('Tree Leaves:', tree6.get_n_leaves())
-print("The test accuracy is 88.95% but the train set accuracy is around 89.23%.")
+print("The test accuracy is 87.38% but the train set accuracy is around 87.43%.\
+So our leading 5 parameters can predict both the training and test sets to about 87% accuracy,\
+ with tree depth 8, and only 201 leaves.")
 
 #%%
 # Get most important tree features
 features = cols.columns
 importances = tree6.feature_importances_
-leading_indices = (-importances).argsort()[:4]
+leading_indices = (-importances).argsort()[:5]
 print ("Features sorted by importance:")
-for i in range (4):
+for i in range (5):
     print (i+1, features[leading_indices[i]], round(100*importances[leading_indices[i]],2), '%')
 
-
-
-
-
-
-
-#%%
-def run_cross_validation_on_trees(x, y, tree_depths, cv=5, scoring='accuracy'):
-    cv_scores_list = []
-    cv_scores_std = []
-    cv_scores_mean = []
-    accuracy_scores = []
-    for depth in tree_depths:
-        tree_model = DecisionTreeClassifier(max_depth=depth)
-        cv_scores = cross_val_score(tree_model, x, y, cv=cv, scoring=scoring)
-        cv_scores_list.append(cv_scores)
-        cv_scores_mean.append(cv_scores.mean())
-        cv_scores_std.append(cv_scores.std())
-        accuracy_scores.append(tree_model.fit(x, y).score(x, y))
-    cv_scores_mean = np.array(cv_scores_mean)
-    cv_scores_std = np.array(cv_scores_std)
-    accuracy_scores = np.array(accuracy_scores)
-    return cv_scores_mean, cv_scores_std, accuracy_scores
-
-
-
-def plot_cross_validation_on_trees(depths, cv_scores_mean, cv_scores_std, accuracy_scores, title):
-    fig, ax = plt.subplots(1,1, figsize=(15,5))
-    ax.plot(depths, cv_scores_mean, '-o', label='mean cross-validation accuracy', alpha=0.9)
-    ax.fill_between(depths, cv_scores_mean-2*cv_scores_std, cv_scores_mean+2*cv_scores_std, alpha=0.2)
-    ylim = plt.ylim()
-    ax.plot(depths, accuracy_scores, '-*', label='train accuracy', alpha=0.9)
-    ax.set_title(title, fontsize=16)
-    ax.set_xlabel('Tree depth', fontsize=14)
-    ax.set_ylabel('Accuracy', fontsize=14)
-    ax.set_ylim(ylim)
-    ax.set_xticks(depths)
-    ax.legend()
-
-sm_tree_depths = range(1,15)
-sm_cv_scores_mean, sm_cv_scores_std, sm_accuracy_scores = run_cross_validation_on_trees(x_train, y_train, sm_tree_depths)
-
-plot_cross_validation_on_trees(sm_tree_depths, sm_cv_scores_mean, sm_cv_scores_std, sm_accuracy_scores, 
-                               'Accuracy per decision tree depth on training data')
-
-
-#%%
-idx_max = sm_cv_scores_mean.argmax()
-sm_best_tree_depth = sm_tree_depths[idx_max]
-sm_best_tree_cv_score = sm_cv_scores_mean[idx_max]
-sm_best_tree_cv_score_std = sm_cv_scores_std[idx_max]
-print('The depth-{} tree achieves the best mean cross-validation accuracy {} +/- {}% on training dataset'.format(
-      sm_best_tree_depth, round(sm_best_tree_cv_score*100,5), round(sm_best_tree_cv_score_std*100, 5)))
-
-
-#%%
-############################################################################
-# TREE 7
-############################################################################
-# tree with top 4 important features
-print("From here let's build a new model with the top 4 important features.")
-
-cols = df2[['baggage_handling', 'ease_of_online_booking', 'online_boarding', 'food_and_drink', 'inflight_entertainment']]
-x = cols.values
-y = df2['customer_type'].values
-
-x_train, x_test, y_train, y_test = train_test_split (x, y, test_size=0.2, random_state=1)
-print("The training data size is : {} ".format(x_train.shape))
-print("The test data size is : {} ".format(x_test.shape))
-
-#%%
-tree7 = DecisionTreeClassifier(max_depth=None,criterion='entropy')
-
-clf7 = tree7.fit(x_train,y_train)
-y_train_pred = tree7.predict(x_train)
-y_test_pred = tree7.predict(x_test)
-
-# train set
-print('train set evaluation: ')
-print("Score: ",accuracy_score(y_train, y_train_pred))
-print("Confusion Matrix: \n",confusion_matrix(y_train, y_train_pred))
-print("Classification report:\n",classification_report(y_train, y_train_pred))
-
-# %%
-# test set
-print('test set evaluation: ')
-print("Score: ",accuracy_score(y_test, y_test_pred))
-print("Confusion Matrix: \n",confusion_matrix(y_test, y_test_pred))
-print("Classification report:\n",classification_report(y_test, y_test_pred))
-
-# Tree depth & leafs
-print ('Tree Depth:', tree7.get_depth())
-print ('Tree Leaves:', tree7.get_n_leaves())
-print("The test accuracy is 88.95% but the train set accuracy is around 89.23%.")
-
-
-#%%
-# Get most important tree features
-features = cols.columns
-importances = tree6.feature_importances_
-leading_indices = (-importances).argsort()[:3]
-print ("Features sorted by importance:")
-for i in range (3):
-    print (i+1, features[leading_indices[i]], round(100*importances[leading_indices[i]],2), '%')
-
-
-
-
-#%%
-def run_cross_validation_on_trees(x, y, tree_depths, cv=5, scoring='accuracy'):
-    cv_scores_list = []
-    cv_scores_std = []
-    cv_scores_mean = []
-    accuracy_scores = []
-    for depth in tree_depths:
-        tree_model = DecisionTreeClassifier(max_depth=depth)
-        cv_scores = cross_val_score(tree_model, x, y, cv=cv, scoring=scoring)
-        cv_scores_list.append(cv_scores)
-        cv_scores_mean.append(cv_scores.mean())
-        cv_scores_std.append(cv_scores.std())
-        accuracy_scores.append(tree_model.fit(x, y).score(x, y))
-    cv_scores_mean = np.array(cv_scores_mean)
-    cv_scores_std = np.array(cv_scores_std)
-    accuracy_scores = np.array(accuracy_scores)
-    return cv_scores_mean, cv_scores_std, accuracy_scores
-
-
-
-def plot_cross_validation_on_trees(depths, cv_scores_mean, cv_scores_std, accuracy_scores, title):
-    fig, ax = plt.subplots(1,1, figsize=(15,5))
-    ax.plot(depths, cv_scores_mean, '-o', label='mean cross-validation accuracy', alpha=0.9)
-    ax.fill_between(depths, cv_scores_mean-2*cv_scores_std, cv_scores_mean+2*cv_scores_std, alpha=0.2)
-    ylim = plt.ylim()
-    ax.plot(depths, accuracy_scores, '-*', label='train accuracy', alpha=0.9)
-    ax.set_title(title, fontsize=16)
-    ax.set_xlabel('Tree depth', fontsize=14)
-    ax.set_ylabel('Accuracy', fontsize=14)
-    ax.set_ylim(ylim)
-    ax.set_xticks(depths)
-    ax.legend()
-
-sm_tree_depths = range(1,16)
-sm_cv_scores_mean, sm_cv_scores_std, sm_accuracy_scores = run_cross_validation_on_trees(x_train, y_train, sm_tree_depths)
-
-plot_cross_validation_on_trees(sm_tree_depths, sm_cv_scores_mean, sm_cv_scores_std, sm_accuracy_scores, 
-                               'Accuracy per decision tree depth on training data')
-
-
-#%%
-idx_max = sm_cv_scores_mean.argmax()
-sm_best_tree_depth = sm_tree_depths[idx_max]
-sm_best_tree_cv_score = sm_cv_scores_mean[idx_max]
-sm_best_tree_cv_score_std = sm_cv_scores_std[idx_max]
-print('The depth-{} tree achieves the best mean cross-validation accuracy {} +/- {}% on training dataset'.format(
-      sm_best_tree_depth, round(sm_best_tree_cv_score*100,5), round(sm_best_tree_cv_score_std*100, 5)))
-
-
-
-
-
-
-
-
-
-
-
-
-#%%
-############################################################################
-# TREE 8
-############################################################################
-
-print("Now we are making a final tree with depth 12.")
-
-cols = df2[['departure_arrival_time_convenient', 'ease_of_online_booking', 'online_boarding', 'gate_location', 'checkin_service']]
-x = cols.values
-y = df2['customer_type'].values
-
-x_train, x_test, y_train, y_test = train_test_split (x, y, test_size=0.2, random_state=1)
-print("The training data size is : {} ".format(x_train.shape))
-print("The test data size is : {} ".format(x_test.shape))
-
-#%%
-tree8 = DecisionTreeClassifier(max_depth=12,criterion='entropy')
-
-clf8 = tree8.fit(x_train,y_train)
-y_train_pred = tree8.predict(x_train)
-y_test_pred = tree8.predict(x_test)
-
-# train set
-print('train set evaluation: ')
-print("Score: ",accuracy_score(y_train, y_train_pred))
-print("Confusion Matrix: \n",confusion_matrix(y_train, y_train_pred))
-print("Classification report:\n",classification_report(y_train, y_train_pred))
-
-# %%
-# test set
-print('test set evaluation: ')
-print("Score: ",accuracy_score(y_test, y_test_pred))
-print("Confusion Matrix: \n",confusion_matrix(y_test, y_test_pred))
-print("Classification report:\n",classification_report(y_test, y_test_pred))
-
-# Tree depth & leafs
-print ('Tree Depth:', tree8.get_depth())
-print ('Tree Leaves:', tree8.get_n_leaves())
-print("The test accuracy is 83.84% but the train set accuracy is around 83.46%.\
-So our leading 5 parameters can predict both the training and test sets to about 83% accuracy,\
- with tree depth 2, and only 4 leaves.")
-
-#%%
-# Get most important tree features
-features = cols.columns
-importances = tree8.feature_importances_
-leading_indices = (-importances).argsort()[:4]
-print ("Features sorted by importance:")
-for i in range (4):
-    print (i+1, features[leading_indices[i]], round(100*importances[leading_indices[i]],2), '%')
-
-print("Now departure_arrival_time_convenient covering the major importance of more than 50% alone.")
+print("Now departure_arrival_time_convenient and ease_of_online_booking covering the major importance of more than 50% alone.")
 
 
 
@@ -663,10 +419,10 @@ print("Now departure_arrival_time_convenient covering the major importance of mo
 # Graphing the tree
 from sklearn.tree import export_graphviz  
 
-filename = 'tree8'
+filename = 'tree6'
 import os
 print(os.getcwd())
-export_graphviz(tree8, out_file = filename + '.dot' , feature_names =cols.columns) 
+export_graphviz(tree6, out_file = filename + '.dot' , feature_names =cols.columns) 
 
 #%%
 #import pydot
