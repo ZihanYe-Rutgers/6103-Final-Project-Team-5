@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from seaborn import palettes
 
 #%%
 dirpath = os.getcwd() # print("current directory is : " + dirpath)
@@ -83,34 +84,19 @@ modelpredicitons = pd.DataFrame( columns=['Logit'], data= model1LogitFit.predict
 # dfChkBasics(modelpredicitons)
 
 print("Observing the p-values, only inflight_service is not a good predictors \
-as there p-values are greater than 0.05. On the other hand, departure_arrival_time_convenient,\
- ease_of_online_booking and food_and_drink features have a negative relationship with satisfection.\
- So, let's remove these features, and build a new model.")
+as there p-values are greater than 0.05. So, let's remove this features, and build a new model.")
 
 #%%
 
 
-model1LogitFit = glm(formula='satisfaction ~ inflight_wifi_service+gate_location+online_boarding+seat_comfort+inflight_entertainment+onboard_service+leg_room_service+baggage_handling+checkin_service+cleanliness', data=df3, family=sm.families.Binomial()).fit()
+model1LogitFit = glm(formula='satisfaction ~ inflight_wifi_service+departure_arrival_time_convenient+ease_of_online_booking+gate_location+food_and_drink+online_boarding+seat_comfort+inflight_entertainment+onboard_service+leg_room_service+baggage_handling+checkin_service+cleanliness', data=df3, family=sm.families.Binomial()).fit()
 print( model1LogitFit.summary() )
 modelpredicitons = pd.DataFrame( columns=['Logit'], data= model1LogitFit.predict(df3)) 
 # print(modelpredicitons.head())
 # dfChkBasics(modelpredicitons)
 
-print("Observing the p-values, only cleanliness is not a good predictors\
- as there p-values are greater than 0.05. On the other hand, gate_location\
- has a negative relationship with satisfection.\
- So, let's remove these features, and build a new model.")
+print("Observing the p-values, all the features seems very significant.")
 
-#%%
-
-
-model1LogitFit = glm(formula='satisfaction ~ inflight_wifi_service+online_boarding+seat_comfort+inflight_entertainment+onboard_service+leg_room_service+baggage_handling+checkin_service', data=df3, family=sm.families.Binomial()).fit()
-print( model1LogitFit.summary() )
-modelpredicitons = pd.DataFrame( columns=['Logit'], data= model1LogitFit.predict(df3)) 
-# print(modelpredicitons.head())
-# dfChkBasics(modelpredicitons)
-
-print("All the p-values are significant.")
 
 #%%
 model_odds = pd.DataFrame(np.exp(model1LogitFit.params), columns= ['OR'])
@@ -125,5 +111,23 @@ print("\nThe odds of a satisfection is decreases by a factor of ", model_odds.il
 
 print("The probability of satisfection is ", round(p*100, 2), '%')
 
+# %%
+# cols = df3[['inflight_wifi_service', 'departure_arrival_time_convenient', 'ease_of_online_booking', 'gate_location', 'food_and_drink', 'online_boarding', 'seat_comfort','inflight_entertainment', 'onboard_service','leg_room_service','baggage_handling','checkin_service', 'inflight_service', 'cleanliness','customer_type', 'satisfaction']]
+cols = df3[['age', 'gate_location', 'flight_distance', 'departure_delay_in_minutes','arrival_delay_in_minutes', 'customer_type', 'satisfaction']]
+
 
 #%%
+plt.figure(figsize=(14, 10))
+sns.heatmap(cols.corr(), annot=True,cmap='cubehelix')
+sns.set_context(font_scale=5)
+plt.title('Relationships between features')
+plt.show()
+
+# %%
+sns.set(style='white',font_scale=2.2)
+fig = plt.figure(figsize=[35,30])
+mask = np.triu(np.ones_like(cols.corr(), dtype=bool))
+cmap = sns.diverging_palette(200, 0, as_cmap=True)
+sns.heatmap(cols.corr(),cmap='seismic',linewidth=1,linecolor='white',vmax = 1, vmin=-1,mask=mask, annot=True,fmt='0.2f')
+plt.title('Correlation Heatmap', weight='bold',fontsize=50)
+# %%
