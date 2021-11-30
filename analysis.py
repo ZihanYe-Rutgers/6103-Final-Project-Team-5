@@ -358,6 +358,21 @@ print("From the correlation matrix it doesn't seems there's much effect on the d
  the airlines but airport or weather condition.")
 
 #### more from Zihan Ye
+#%%
+################Numerical correlation
+numerical_features =df[['age','flight_distance','departure_delay_in_minutes','arrival_delay_in_minutes','satisfaction','customer_type']]
+replace_map = {'customer_type': {'disloyal Customer': 0,'Loyal Customer': 1},
+               'satisfaction': {'neutral or dissatisfied': 0,'satisfied': 1}
+}
+numerical_features.replace(replace_map, inplace=True)
+corr_numerical = numerical_features.corr()
+
+ax2 = sns.heatmap(corr_numerical,annot=True)
+sns.set_context(font_scale=10)
+plt.title('Relationships between numerical features')
+plt.show()
+#%%
+################Categorical correlation
 categorical_features=df.copy()
 replace_map = {'Gender': {'Male': 0,'Female': 1 },
                         'customer_type': {'disloyal Customer': 0,'Loyal Customer': 1},
@@ -375,8 +390,8 @@ ax2 = sns.heatmap(corr_categorical,annot=True,annot_kws={"fontsize":8})
 sns.set_context(font_scale=10)
 plt.title('Relationships between categorical features')
 plt.show()
-
-# departure_delay_in_minutes - satisfaction
+#%%
+#########################departure_delay_in_minutes - satisfaction
 dep_sat = df[['departure_delay_in_minutes','satisfaction']].copy()
 dep_sat
 # %%
@@ -391,8 +406,8 @@ dep_sat['dep_group'] = dep_group
 dep_sat
 # %%
 sns.countplot(x='dep_group', hue='satisfaction', data=dep_sat)
-
-# %% arrival_delay_in_minutes - satisfaction
+#%%
+############################# arrival_delay_in_minutes - satisfaction
 arr_sat = df[['arrival_delay_in_minutes','satisfaction']].copy()
 arr_sat
 # %%
