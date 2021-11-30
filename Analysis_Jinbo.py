@@ -409,7 +409,7 @@ print ("Features sorted by importance:")
 for i in range (5):
     print (i+1, features[leading_indices[i]], round(100*importances[leading_indices[i]],2), '%')
 
-print("Now departure_arrival_time_convenient and ease_of_online_booking covering the major importance of more than 50% alone.")
+print("Now departure_arrival_time_convenient and ease_of_online_booking covering the major importance of more than 50% together.")
 
 
 
