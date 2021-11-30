@@ -6,7 +6,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from seaborn.palettes import color_palette
-plt.style.use('fivethirtyeight')
+# plt.style.use('fivethirtyeight')
 
 #%%
 dirpath = os.getcwd() # print("current directory is : " + dirpath)
@@ -40,6 +40,7 @@ df.shape
 # For data visualization purpose we are convering our variables to appropiate data types \
 #  i.e. numeric, categorical, ordered categorical and the dataframe name is df_vis
 
+df_rating=pd.DataFrame(columns=['Feature','Rate'])
 df_vis = df.copy()
 print('Shape of the df_vis:')
 df_vis.shape
@@ -170,6 +171,10 @@ sns.countplot(x ='inflight_wifi_service', data = df_vis)
 plt.title("Distribution of inflight_wifi_service")
 plt.show()
 
+# Avg rating 
+df_rating = df_rating.append({"Feature":"inflight_wifi_service", "Rate":df['inflight_wifi_service'].mean()}, ignore_index=True)
+print("Overall Rating: ", round(df['inflight_wifi_service'].mean(),2))
+
 #%%
 # departure_arrival_time_convenient - ordered categorical
 print("Lets inspect the departure_arrival_time_convenient column: ")
@@ -181,6 +186,10 @@ df_vis['departure_arrival_time_convenient'] = pd.Categorical(df_vis['departure_a
 sns.countplot(x ='departure_arrival_time_convenient', data = df_vis)
 plt.title("Distribution of departure_arrival_time_convenient")
 plt.show()
+
+
+df_rating=df_rating.append({"Feature":"departure_arrival_time_convenient", "Rate":df['departure_arrival_time_convenient'].mean()}, ignore_index=True)
+print("Overall Rating: ", round(df['departure_arrival_time_convenient'].mean(),2))
 
 #%%
 # ease_of_online_booking - ordered categorical
@@ -194,6 +203,9 @@ sns.countplot(x ='ease_of_online_booking', data = df_vis)
 plt.title("Distribution of ease_of_online_booking")
 plt.show()
 
+df_rating=df_rating.append({"Feature":"ease_of_online_booking", "Rate":df['ease_of_online_booking'].mean()}, ignore_index=True)
+print("Overall Rating: ", round(df['ease_of_online_booking'].mean(),2))
+
 #%%
 # gate_location  - ordered categorical
 print("Lets inspect the gate_location column: ")
@@ -205,6 +217,10 @@ df_vis['gate_location'] = pd.Categorical(df_vis['gate_location'], ordered=True)
 sns.countplot(x ='gate_location', data = df_vis)
 plt.title("Distribution of gate_location")
 plt.show()
+
+df_rating=df_rating.append({"Feature":"gate_location", "Rate":df['gate_location'].mean()}, ignore_index=True)
+print("Overall Rating: ", round(df['gate_location'].mean(),2))
+
 
 #%%
 # food_and_drink - ordered categorical
@@ -219,6 +235,9 @@ sns.countplot(x ='food_and_drink', data = df_vis)
 plt.title("Distribution of food_and_drink")
 plt.show()
 
+df_rating=df_rating.append({"Feature":"food_and_drink", "Rate":df['food_and_drink'].mean()}, ignore_index=True)
+print("Overall Rating: ", round(df['food_and_drink'].mean(),2))
+
 #%%
 # online_boarding - ordered categorical
 print("Lets inspect the online_boarding column: ")
@@ -230,6 +249,10 @@ df_vis['online_boarding'] = pd.Categorical(df_vis['online_boarding'], ordered=Tr
 sns.countplot(x ='online_boarding', data = df_vis)
 plt.title("Distribution of online_boarding")
 plt.show()
+
+
+df_rating=df_rating.append({"Feature":"online_boarding", "Rate":df['online_boarding'].mean()}, ignore_index=True)
+print("Overall Rating: ", round(df['online_boarding'].mean(),2))
 
 #%%
 # seat_comfort - ordered categorical
@@ -243,6 +266,10 @@ sns.countplot(x ='seat_comfort', data = df_vis)
 plt.title("Distribution of seat_comfort")
 plt.show()
 
+df_rating=df_rating.append({"Feature":"seat_comfort", "Rate":df['seat_comfort'].mean()}, ignore_index=True)
+print("Overall Rating: ", round(df['seat_comfort'].mean(),2))
+
+
 #%%
 # inflight_entertainment - ordered categorical
 print("Lets inspect the Gender column: ")
@@ -254,6 +281,12 @@ df_vis['inflight_entertainment'] = pd.Categorical(df_vis['inflight_entertainment
 sns.countplot(x ='inflight_entertainment', data = df_vis)
 plt.title("Distribution of inflight_entertainment")
 plt.show()
+
+df_rating=df_rating.append({"Feature":"inflight_entertainment", "Rate":df['inflight_entertainment'].mean()}, ignore_index=True)
+print("Overall Rating: ", round(df['inflight_entertainment'].mean(),2))
+
+
+
 
 #%%
 # onboard_service - ordered categorical
@@ -268,6 +301,11 @@ sns.countplot(x ='onboard_service', data = df_vis)
 plt.title("Distribution of onboard_service")
 plt.show()
 
+df_rating=df_rating.append({"Feature":"onboard_service", "Rate":df['onboard_service'].mean()}, ignore_index=True)
+print("Overall Rating: ", round(df['onboard_service'].mean(),2))
+
+
+
 #%%
 # leg_room_service - ordered categorical
 print("Lets inspect the leg_room_service column: ")
@@ -279,6 +317,11 @@ df_vis['leg_room_service'] = pd.Categorical(df_vis['leg_room_service'], ordered=
 sns.countplot(x ='leg_room_service', data = df_vis)
 plt.title("Distribution of leg_room_service")
 plt.show()
+
+df_rating=df_rating.append({"Feature":"leg_room_service", "Rate":df['leg_room_service'].mean()}, ignore_index=True)
+print("Overall Rating: ", round(df['leg_room_service'].mean(),2))
+
+
 
 #%%
 # baggage_handling- ordered categorical
@@ -292,6 +335,11 @@ sns.countplot(x ='baggage_handling', data = df_vis)
 plt.title("Distribution of baggage_handling")
 plt.show()
 
+df_rating=df_rating.append({"Feature":"baggage_handling", "Rate":df['baggage_handling'].mean()}, ignore_index=True)
+print("Overall Rating: ", round(df['baggage_handling'].mean(),2))
+
+
+
 #%%
 # checkin_service - ordered categorical
 print("Lets inspect the Gender column: ")
@@ -304,6 +352,10 @@ sns.countplot(x ='checkin_service', data = df_vis)
 plt.title("Distribution of checkin_service")
 plt.show()
 
+df_rating=df_rating.append({"Feature":"checkin_service", "Rate":df['checkin_service'].mean()}, ignore_index=True)
+print("Overall Rating: ", round(df['checkin_service'].mean(),2))
+
+
 #%%
 # inflight_service - ordered categorical
 print("Lets inspect the inflight_service column: ")
@@ -315,6 +367,11 @@ df_vis['inflight_service'] = pd.Categorical(df_vis['inflight_service'], ordered=
 sns.countplot(x ='inflight_service', data = df_vis)
 plt.title("Distribution of inflight_service")
 plt.show()
+
+df_rating=df_rating.append({"Feature":"inflight_service", "Rate":df['inflight_service'].mean()}, ignore_index=True)
+print("Overall Rating: ", round(df['inflight_service'].mean(),2))
+
+
 #%%
 # cleanliness - ordered categorical
 print("Lets inspect the cleanliness column: ")
@@ -326,6 +383,10 @@ df_vis['cleanliness'] = pd.Categorical(df_vis['cleanliness'], ordered=True)
 sns.countplot(x ='cleanliness', data = df_vis)
 plt.title("Distribution of cleanliness")
 plt.show()
+
+df_rating=df_rating.append({"Feature":"cleanliness", "Rate":df['cleanliness'].mean()}, ignore_index=True)
+print("Overall Rating: ", round(df['cleanliness'].mean(),2))
+
 
 #%%
 #################################################################################
@@ -358,7 +419,70 @@ print("From the correlation matrix it doesn't seems there's much effect on the d
  the airlines but airport or weather condition.")
 
 #### more from Zihan Ye
+#%%
+################Numerical correlation
+numerical_features =df[['age','flight_distance','departure_delay_in_minutes','arrival_delay_in_minutes','satisfaction','customer_type']]
+replace_map = {'customer_type': {'disloyal Customer': 0,'Loyal Customer': 1},
+               'satisfaction': {'neutral or dissatisfied': 0,'satisfied': 1}
+}
+numerical_features.replace(replace_map, inplace=True)
+corr_numerical = numerical_features.corr()
 
+# ax2 = sns.heatmap(corr_numerical,annot=True)
+# sns.set_context(font_scale=10)
+# plt.title('Relationships between numerical features')
+# plt.show()
+# #%%
+# ################Categorical correlation
+# categorical_features=df.copy()
+# replace_map = {'Gender': {'Male': 0,'Female': 1 },
+#                         'customer_type': {'disloyal Customer': 0,'Loyal Customer': 1},
+#                         'type_of_travel': {'Personal Travel': 0,'Business travel': 1},
+#                         'customer_class': {'Eco': 0,'Eco Plus': 1 , 'Business': 2},
+#                         'satisfaction': {'neutral or dissatisfied': 0,'satisfied': 1}
+# }
+
+# categorical_features.replace(replace_map, inplace=True)
+# print(categorical_features.dtypes)
+
+# corr_categorical = categorical_features.corr()
+# ax2 = plt.subplots(figsize=(10,10))
+# ax2 = sns.heatmap(corr_categorical,annot=True,annot_kws={"fontsize":8})
+# sns.set_context(font_scale=10)
+# plt.title('Relationships between categorical features')
+# plt.show()
+# #%%
+# #########################departure_delay_in_minutes - satisfaction
+# dep_sat = df[['departure_delay_in_minutes','satisfaction']].copy()
+# dep_sat
+# # %%
+# dep_sat = df[['departure_delay_in_minutes','satisfaction']].copy()
+
+# dep_sat['dep_group'] = 0
+# # manual cut
+# bins = pd.IntervalIndex.from_tuples([(0,0.9), (1, 30), (31, 60), (61, 1600)],closed='left')
+# dep_group = pd.cut(x=dep_sat.departure_delay_in_minutes.to_list(),bins=bins)
+# dep_group.categories = ['0', '1-30', '31-60','>60']
+# dep_sat['dep_group'] = dep_group
+# dep_sat
+# # %%
+# sns.countplot(x='dep_group', hue='satisfaction', data=dep_sat)
+# #%%
+# ############################# arrival_delay_in_minutes - satisfaction
+# arr_sat = df[['arrival_delay_in_minutes','satisfaction']].copy()
+# arr_sat
+# # %%
+# arr_sat = df[['arrival_delay_in_minutes','satisfaction']].copy()
+
+# arr_sat['arr_group'] = 0
+# # manual cut
+# bins = pd.IntervalIndex.from_tuples([(0,0.9), (1, 30), (31, 60), (61, 1600)],closed='left')
+# arr_group = pd.cut(x=arr_sat.arrival_delay_in_minutes.to_list(),bins=bins)
+# arr_group.categories = ['0', '1-30', '31-60','>60']
+# arr_sat['arr_group'] = arr_group
+# arr_sat
+# # %%
+# sns.countplot(x='arr_group', hue='satisfaction', data=arr_sat)
 
 ##################################################################################
 # EDA 2
