@@ -6,7 +6,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from seaborn.palettes import color_palette
-# plt.style.use('fivethirtyeight')
+plt.style.use('fivethirtyeight')
 
 #%%
 dirpath = os.getcwd() # print("current directory is : " + dirpath)
@@ -387,102 +387,130 @@ plt.show()
 df_rating=df_rating.append({"Feature":"cleanliness", "Rate":df['cleanliness'].mean()}, ignore_index=True)
 print("Overall Rating: ", round(df['cleanliness'].mean(),2))
 
+#%%
+
+#This is correlation matrix and heatmap of categorical variables
+################Categorical correlation
+categorical_features=df.copy()
+replace_map = {'Gender': {'Male': 0,'Female': 1 },
+                        'customer_type': {'disloyal Customer': 0,'Loyal Customer': 1},
+                        'type_of_travel': {'Personal Travel': 0,'Business travel': 1},
+                        'customer_class': {'Eco': 0,'Eco Plus': 1 , 'Business': 2},
+                        'satisfaction': {'neutral or dissatisfied': 0,'satisfied': 1}
+}
+
+categorical_features.replace(replace_map, inplace=True)
+# print(categorical_features.dtypes)
+
+corr_categorical = categorical_features.corr()
+ax2 = plt.subplots(figsize=(10,10))
+ax2 = sns.heatmap(corr_categorical,annot=True,annot_kws={"fontsize":8})
+sns.set_context(font_scale=10)
+plt.title('Relationships between categorical features')
+plt.show()
 
 #%%
 #################################################################################
-# EDA 1 Zihan YE
+# EDA 1
 #################################################################################
 # 1.1. Does arrival/departure have any effect on customer satisfaction?
 # departure_delay_in_minutes - satisfaction
 #
-df3=df.copy()
-replace_map = {'Gender': {'Male': 0,'Female': 1 },
-                        'customer_type': {'disloyal Customer': 0,'Loyal Customer': 1},
-                        'type_of_travel': {'Personal Travel': 1,'Business travel': 2},
-                        'customer_class': {'Eco': 1,'Eco Plus': 2 , 'Business': 3},
-                        'satisfaction': {'neutral or dissatisfied': 0,'satisfied': 1}
-}
-df3.replace(replace_map, inplace=True)
+
+print("Our 1st SMART Question is  Does arrival/departure have any effect on\
+ customer satisfaction? \n At first we are starting with a correlation plot.")
+# df3=df.copy()
+# replace_map = {'Gender': {'Male': 0,'Female': 1 },
+#                         'customer_type': {'disloyal Customer': 0,'Loyal Customer': 1},
+#                         'type_of_travel': {'Personal Travel': 1,'Business travel': 2},
+#                         'customer_class': {'Eco': 1,'Eco Plus': 2 , 'Business': 3},
+#                         'satisfaction': {'neutral or dissatisfied': 0,'satisfied': 1}
+# }
+# df3.replace(replace_map, inplace=True)
 
 
 
-dd_sat = df3[['departure_delay_in_minutes','arrival_delay_in_minutes','satisfaction']]
+# dd_sat = df3[['departure_delay_in_minutes','arrival_delay_in_minutes','satisfaction']]
 
-plt.figure(figsize=(6, 6))
-sns.heatmap(dd_sat.corr(), annot=True)
-sns.set_context(font_scale=10)
-plt.title('Relationships between delays and satisfection',fontdict=dict(size=18))
-plt.show()
+# plt.figure(figsize=(6, 6))
+# sns.heatmap(dd_sat.corr(), annot=True)
+# sns.set_context(font_scale=10)
+# plt.title('Relationships between delays and satisfection',fontdict=dict(size=18))
+# plt.show()
 
-print("From the correlation matrix it doesn't seems there's much effect on the delays\
- and passenger satisfection. It could be because the delays are mostly not controlled by\
- the airlines but airport or weather condition.")
 
-#### more from Zihan Ye
 #%%
-################Numerical correlation
-numerical_features =df[['age','flight_distance','departure_delay_in_minutes','arrival_delay_in_minutes','satisfaction','customer_type']]
+################ Numerical correlation
+numerical_features =df[['age','flight_distance','departure_delay_in_minutes','arrival_delay_in_minutes','customer_type','satisfaction']].copy()
 replace_map = {'customer_type': {'disloyal Customer': 0,'Loyal Customer': 1},
                'satisfaction': {'neutral or dissatisfied': 0,'satisfied': 1}
 }
 numerical_features.replace(replace_map, inplace=True)
 corr_numerical = numerical_features.corr()
 
-# ax2 = sns.heatmap(corr_numerical,annot=True)
-# sns.set_context(font_scale=10)
-# plt.title('Relationships between numerical features')
-# plt.show()
-# #%%
-# ################Categorical correlation
-# categorical_features=df.copy()
-# replace_map = {'Gender': {'Male': 0,'Female': 1 },
-#                         'customer_type': {'disloyal Customer': 0,'Loyal Customer': 1},
-#                         'type_of_travel': {'Personal Travel': 0,'Business travel': 1},
-#                         'customer_class': {'Eco': 0,'Eco Plus': 1 , 'Business': 2},
-#                         'satisfaction': {'neutral or dissatisfied': 0,'satisfied': 1}
-# }
+ax2 = sns.heatmap(corr_numerical,annot=True)
+sns.set_context(font_scale=10)
+plt.title('Relationships between numerical features')
+plt.show()
+#This is about numerical correlation.
 
-# categorical_features.replace(replace_map, inplace=True)
-# print(categorical_features.dtypes)
 
-# corr_categorical = categorical_features.corr()
-# ax2 = plt.subplots(figsize=(10,10))
-# ax2 = sns.heatmap(corr_categorical,annot=True,annot_kws={"fontsize":8})
-# sns.set_context(font_scale=10)
-# plt.title('Relationships between categorical features')
-# plt.show()
-# #%%
-# #########################departure_delay_in_minutes - satisfaction
-# dep_sat = df[['departure_delay_in_minutes','satisfaction']].copy()
+print("From the correlation matrix it doesn't seems there's much effect on the delays\
+ and passenger satisfection. It could be because the delays are mostly not controlled by\
+ the airlines but airport or weather condition.")
+
+
+#%%
+print("Now we'd like to find out if there can differentiate the delays and satisfaction by categorizing delay ranges.")
+#########################departure_delay_in_minutes - satisfaction
+dep_sat = df[['departure_delay_in_minutes','satisfaction']].copy()
 # dep_sat
-# # %%
-# dep_sat = df[['departure_delay_in_minutes','satisfaction']].copy()
 
-# dep_sat['dep_group'] = 0
-# # manual cut
-# bins = pd.IntervalIndex.from_tuples([(0,0.9), (1, 30), (31, 60), (61, 1600)],closed='left')
-# dep_group = pd.cut(x=dep_sat.departure_delay_in_minutes.to_list(),bins=bins)
-# dep_group.categories = ['0', '1-30', '31-60','>60']
-# dep_sat['dep_group'] = dep_group
+dep_sat = df[['departure_delay_in_minutes','satisfaction']].copy()
+dep_sat['dep_group'] = 0
+# manual cut
+bins = pd.IntervalIndex.from_tuples([(0,0.9), (1, 30), (31, 60), (61, 1600)],closed='left')
+dep_group = pd.cut(x=dep_sat.departure_delay_in_minutes.to_list(),bins=bins)
+dep_group.categories = ['0', '1-30', '31-60','>60']
+dep_sat['dep_group'] = dep_group
 # dep_sat
-# # %%
-# sns.countplot(x='dep_group', hue='satisfaction', data=dep_sat)
-# #%%
-# ############################# arrival_delay_in_minutes - satisfaction
-# arr_sat = df[['arrival_delay_in_minutes','satisfaction']].copy()
-# arr_sat
-# # %%
-# arr_sat = df[['arrival_delay_in_minutes','satisfaction']].copy()
 
-# arr_sat['arr_group'] = 0
-# # manual cut
-# bins = pd.IntervalIndex.from_tuples([(0,0.9), (1, 30), (31, 60), (61, 1600)],closed='left')
-# arr_group = pd.cut(x=arr_sat.arrival_delay_in_minutes.to_list(),bins=bins)
-# arr_group.categories = ['0', '1-30', '31-60','>60']
-# arr_sat['arr_group'] = arr_group
+sns.countplot(x='dep_group', hue='satisfaction', data=dep_sat)
+plt.xlabel("Departure delays")
+plt.title("Departure Delays vs Staisfaction")
+plt.show()
+
+print("For this step, firstly we divided departure delay time into four groups which are not delay, shorter\
+ than half an hour, between 30 to 60 minutes, and longer than 1 hour. Then we did barplot to show the\
+ proportion of passenger's satisfaction in each branch. We found that in each branch the proportion is similar,\
+ so which means departure is influencital factor. The reason is mentioned in correlation matrix. Delay may be \
+ caused by extreme weather. Extreme weather will cause many flight delays in the airport, not only this flight. \
+ So majority of people know that it is not airplines' fault to delay the flight. ")
+#%%
+############################# arrival_delay_in_minutes - satisfaction
+
+print("Now, let's observe the arrival delay's.")
+
+arr_sat = df[['arrival_delay_in_minutes','satisfaction']].copy()
 # arr_sat
-# # %%
-# sns.countplot(x='arr_group', hue='satisfaction', data=arr_sat)
+
+arr_sat = df[['arrival_delay_in_minutes','satisfaction']].copy()
+
+arr_sat['arr_group'] = 0
+# manual cut
+bins = pd.IntervalIndex.from_tuples([(0,0.9), (1, 30), (31, 60), (61, 1600)],closed='left')
+arr_group = pd.cut(x=arr_sat.arrival_delay_in_minutes.to_list(),bins=bins)
+arr_group.categories = ['0', '1-30', '31-60','>60']
+arr_sat['arr_group'] = arr_group
+arr_sat
+
+sns.countplot(x='arr_group', hue='satisfaction', data=arr_sat)
+plt.xlabel("Arrival delays")
+plt.title("Arrival Delays vs Staisfaction")
+plt.show()
+
+print("Again, the result is the same as previous.")
+# Same as departure delay time part. 
 
 ##################################################################################
 # EDA 2
@@ -490,7 +518,10 @@ corr_numerical = numerical_features.corr()
 #%%
 #### 1.2. Which age group is traveling more frequently and how much satisfied they are?
 ### age-satisfaction
-##  making age-group by dividing ages to several intervals
+
+print("Our next SMART question is Which age group is traveling more frequently and how much satisfied they are? ")
+
+print("At first, making age-group by dividing ages to several intervals")
 df3=df.copy()
 replace_map = {'Gender': {'Male': 0,'Female': 1 },
                         'customer_type': {'disloyal Customer': 0,'Loyal Customer': 1},
@@ -512,14 +543,7 @@ age_group = pd.cut(x=ag_sat.age.to_list(),bins=bins)
 age_group.categories = ["0-10", '11-20', '21-30', '31-40','41-50','51-60','61-70','71-80','81-90']
 ag_sat['age_group'] = age_group
 
-#%%
 
-##################################################################################
-# EDA 3
-##################################################################################
-
-## 1.3. Which age group is travelling more?
-# count plot
 sns.countplot(x ='age_group',hue='satisfaction', palette=['r','b'], data = ag_sat)
 plt.title("Age groups by satisfaction")
 plt.show()
@@ -570,10 +594,12 @@ print("The highest rate of neutral/dissatisfaction is from children groups. Even
 
 #%%
 #################################################################################
-# EDA 4
+# EDA 3
 #################################################################################
-# 1.4. Which ticket class has more satisfaction?
+# 1.3. Which ticket class has more satisfaction?
 # 
+
+print("Our 3rd SMART question is Which ticket class has more satisfaction?")
 
 cc_sat = df3[['customer_class','satisfaction']]
 
@@ -612,17 +638,19 @@ print("Here we can see, around 80% economy class passengers are not so satisfied
 
 #%%
 #################################################################################
-# EDA 5
+# EDA 4
 #################################################################################
-# 1.5. Who are more satisfied? Male or Female?
+# 1.4. Who are more satisfied? Male or Female?
 
+print("Our last SMART question for EDA is Who are more satisfied? Male or Female?")
 # count plot
 sns.countplot(x ='Gender',hue='satisfaction', data = df_vis, palette=['#E12C1E','#2780D8'])
 plt.title("Satisfaction by Male/Female")
 plt.legend(bbox_to_anchor=(1.0, 1.0), loc='upper left')
 plt.show()
 
-print("Overall female seems to be less satisfied than men. Now let's explore it by their ages.")
+print("Overall female seems to be less satisfied than men. Now let's explore it by their ages\
+ to find out if all ages are having equal satisfaction among both male and female.")
 
 #%%
 mf_sat = df_vis[['Gender','age','satisfaction']]
@@ -658,7 +686,483 @@ print("Here looks like more females of age between 20-30 are a bit more unsatisf
 ############################################################################################################
 
 # 1. What are the factors that satisfy the passenger?
-# (Nawshin parts)
+
+print("Our goal is to find out the features that are most important for customer satisfaction\
+ For that we are building model through dicision tree classifiers.")
+
+print("Before that let's look into the features and their overall ratings.")
+
+
+df_rating=df_rating.sort_values('Rate')
+
+plt.plot(df_rating['Rate'],df_rating['Feature'])
+plt.title('Features Sorted by Ratings:')
+plt.xlabel("Ratings")
+plt.xticks(rotation=90)
+plt.show()
+
+print("Here we can see that the highest rating is of inflight service and baggage handling.\
+ But looking at the rate it's only slightly above 3.6 which is neutral type.")
+
+print("Now, let's build some tree's and ovserve the feature importances.")
+
+#%%
+
+# For decision tree we need the values to be numeric. So, we are converting the following features to numeric.
+# 'Gender': {'Male': 0,'Female': 1 }
+# 'customer_type': {'disloyal Customer': 0,'Loyal Customer': 1}
+# 'type_of_travel': {'Personal Travel': 0,'Business travel': 1}
+# 'customer_class': {'Eco': 0,'Eco Plus': 1 , 'Business': 2}
+# 'satisfaction': {'neutral or dissatisfied': 0,'satisfied': 1}
+
+dfn=df.copy()
+replace_map = {'Gender': {'Male': 0,'Female': 1 },
+                        'customer_type': {'disloyal Customer': 0,'Loyal Customer': 1},
+                        'type_of_travel': {'Personal Travel': 0,'Business travel': 1},
+                        'customer_class': {'Eco': 0,'Eco Plus': 1 , 'Business': 2},
+                        'satisfaction': {'neutral or dissatisfied': 0,'satisfied': 1}
+}
+
+dfn.replace(replace_map, inplace=True)
+
+from sklearn.model_selection import train_test_split
+
+cols = dfn.iloc[:,:-1]
+x = cols.values
+y = dfn['satisfaction'].values
+
+# Train-Test split
+x_train, x_test, y_train, y_test = train_test_split (x, y, test_size=0.2, random_state=44)
+print("The training data size is : {} ".format(x_train.shape))
+print("The test data size is : {} ".format(x_test.shape))
+
+#%%
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import confusion_matrix 
+from sklearn.metrics import classification_report
+
+#Decision Tree Classifier
+from sklearn.tree import DecisionTreeClassifier
+# Instantiate dtree
+tree1 = DecisionTreeClassifier(max_depth=None,criterion='entropy',class_weight='balanced')
+# Fit dt to the training set
+clf = tree1.fit(x_train,y_train)
+y_train_pred = tree1.predict(x_train)
+y_test_pred = tree1.predict(x_test)
+
+# Evaluate train-set accuracy
+print('train set evaluation: ')
+print("Accuracy score: ",accuracy_score(y_train, y_train_pred))
+print("Confusion Matrix: \n",confusion_matrix(y_train, y_train_pred))
+print("Classification report:\n",classification_report(y_train, y_train_pred))
+
+#%%
+
+# Evaluate test-set accuracy
+print('test set evaluation: ')
+print("Accuracy score: ",accuracy_score(y_test, y_test_pred))
+print("Confusion Matrix: \n",confusion_matrix(y_test, y_test_pred))
+print("Classification report: \n ",classification_report(y_test, y_test_pred))
+
+# Tree depth & leafs
+print ('Tree Depth:', tree1.get_depth())
+print ('Tree Leaves:', tree1.get_n_leaves())
+
+print("The train accuracy is 100% but the test set accuracy is around 95%. \
+ The tree has too many featues. Let's find out the which features have more importance.")
+
+#%%
+
+# Get most important tree features
+features = cols.columns
+x=len(cols.columns)
+importances = tree1.feature_importances_
+leading_indices = (-importances).argsort()[:x]
+res=pd.DataFrame(columns = ['name','val'])
+
+print ("Features sorted by importance:")
+for i in range (x):
+    name=features[leading_indices[i]]
+    val=round(100*importances[leading_indices[i]],2)
+    res = res.append({'name': name, 'val':val},ignore_index=True)
+    print (i+1, features[leading_indices[i]], round(100*importances[leading_indices[i]],2), '%')
+
+plt.figure(figsize=(10, 6))
+ax = sns.barplot(x='name',y='val', data=res)
+patches = ax.patches
+for i in range(len(patches)):
+   x = patches[i].get_x() + patches[i].get_width()/2
+   y = patches[i].get_height()+.05
+   ax.annotate('{:.1f}%'.format(res.val[i]), (x, y), ha='center')
+
+plt.title('Features sorted by importance:')
+plt.ylabel("Percentage of Importance(%)")
+plt.xticks(rotation=90)
+plt.show()
+# add a graph
+
+#####################################################################################################
+# TREE 2
+#####################################################################################################
+#%%
+
+print("From here let's build a new model with the top 6 important features.")
+
+
+cols = dfn[['online_boarding', 'inflight_wifi_service', 'type_of_travel', 'inflight_entertainment', 'customer_type', 'checkin_service']]
+x = cols.values
+y = dfn['satisfaction'].values
+
+x_train, x_test, y_train, y_test = train_test_split (x, y, test_size=0.2, random_state=44)
+print("The training data size is : {} ".format(x_train.shape))
+print("The test data size is : {} ".format(x_test.shape))
+
+#%%
+
+# Instantiate dtree
+tree2 = DecisionTreeClassifier(max_depth=None,criterion='entropy',class_weight='balanced')
+# Fit dt to the training set
+clf2 = tree2.fit(x_train,y_train)
+y_train_pred = tree2.predict(x_train)
+y_test_pred = tree2.predict(x_test)
+
+# Evaluate train-set accuracy
+print('train set evaluation: ')
+print("Accuracy score: ",accuracy_score(y_train, y_train_pred))
+print("Confusion Matrix: \n",confusion_matrix(y_train, y_train_pred))
+print("Classification report:\n",classification_report(y_train, y_train_pred))
+
+#%%
+
+# Evaluate test-set accuracy
+print('test set evaluation: ')
+print("Accuracy score: ",accuracy_score(y_test, y_test_pred))
+print("Confusion Matrix: \n",confusion_matrix(y_test, y_test_pred))
+print("Classification report:\n",classification_report(y_test, y_test_pred))
+
+# Tree depth & leafs
+print ('Tree Depth:', tree2.get_depth())
+print ('Tree Leaves:', tree2.get_n_leaves())
+
+print("The test accuracy is 93.6% and the train set accuracy is around 93.8%. \
+ It means it is a good model.")
+#%%
+# Get most important tree features
+features = cols.columns
+x=len(cols.columns)
+importances = tree2.feature_importances_
+leading_indices = (-importances).argsort()[:x]
+res=pd.DataFrame(columns = ['name','val'])
+
+print ("Features sorted by importance:")
+for i in range (x):
+    name=features[leading_indices[i]]
+    val=round(100*importances[leading_indices[i]],2)
+    res = res.append({'name': name, 'val':val},ignore_index=True)
+    print (i+1, features[leading_indices[i]], round(100*importances[leading_indices[i]],2), '%')
+
+plt.figure(figsize=(6, 4))
+ax = sns.barplot(x='name',y='val', data=res)
+patches = ax.patches
+for i in range(len(patches)):
+   x = patches[i].get_x() + patches[i].get_width()/2
+   y = patches[i].get_height()+.05
+   ax.annotate('{:.1f}%'.format(res.val[i]), (x, y), ha='center')
+
+plt.title('Features sorted by importance:')
+plt.ylabel("Percentage of Importance(%)")
+plt.xticks(rotation=90)
+plt.show()
+
+#%%
+#################################################################################
+# TREE 3
+####################################################################################
+
+print("Now we'd be making another model with the columns that represents airlines reviews so that,\
+ we can actually find out the important factors of passenger satisfection. The features are: \
+ \n1. inflight_wifi_service\
+ \n2. departure_arrival_time_convenient\
+ \n3. ease_of_online_booking \
+ \n4. gate_location\
+ \n5. food_and_drink \
+ \n6. online_boarding \
+ \n7. seat_comfort  \
+ \n8. inflight_entertainment \
+ \n9. onboard_service \
+ \n10. leg_room_service \
+ \n11. baggage_handling \
+ \n12. checkin_service  \
+ \n13. inflight_service\
+ \n14. cleanliness")
+
+
+cols = dfn[['inflight_wifi_service', 'departure_arrival_time_convenient', 'ease_of_online_booking', 'gate_location', 'food_and_drink', 'online_boarding', 'seat_comfort','inflight_entertainment', 'onboard_service','leg_room_service','baggage_handling','checkin_service', 'inflight_service', 'cleanliness']]
+x = cols.values
+y = dfn['satisfaction'].values
+
+x_train, x_test, y_train, y_test = train_test_split (x, y, test_size=0.2, random_state=44)
+print("The training data size is : {} ".format(x_train.shape))
+print("The test data size is : {} ".format(x_test.shape))
+
+#%%
+
+# Instantiate dtree
+tree3 = DecisionTreeClassifier(max_depth=None,criterion='entropy',class_weight='balanced')
+# Fit dt to the training set
+clf3 = tree3.fit(x_train,y_train)
+y_train_pred = tree3.predict(x_train)
+y_test_pred = tree3.predict(x_test)
+
+# Evaluate train-set accuracy
+print('train set evaluation: ')
+print("Accuracy score: ",accuracy_score(y_train, y_train_pred))
+print("Confusion Matrix: \n",confusion_matrix(y_train, y_train_pred))
+print("Classification report:\n",classification_report(y_train, y_train_pred))
+
+#%%
+# Evaluate test-set accuracy
+print('test set evaluation: ')
+print("Accuracy score: ",accuracy_score(y_test, y_test_pred))
+print("Confusion Matrix: \n",confusion_matrix(y_test, y_test_pred))
+print("Classification report:\n",classification_report(y_test, y_test_pred))
+
+# Tree depth & leafs
+print ('Tree Depth:', tree3.get_depth())
+print ('Tree Leaves:', tree3.get_n_leaves())
+
+print("The test accuracy is 99% but the train set accuracy is around 92%. \
+ Again, the tree seems to have too many featues. Let's find out the which features have more importance\
+ and try to make the test accuracy better.")
+
+#%%
+# Get most important tree features
+features = cols.columns
+x=len(cols.columns)
+importances = tree3.feature_importances_
+leading_indices = (-importances).argsort()[:x]
+res=pd.DataFrame(columns = ['name','val'])
+
+print ("Features sorted by importance:")
+for i in range (x):
+    name=features[leading_indices[i]]
+    val=round(100*importances[leading_indices[i]],2)
+    res = res.append({'name': name, 'val':val},ignore_index=True)
+    print (i+1, features[leading_indices[i]], round(100*importances[leading_indices[i]],2), '%')
+
+plt.figure(figsize=(8, 6))
+ax = sns.barplot(x='name',y='val', data=res)
+patches = ax.patches
+for i in range(len(patches)):
+   x = patches[i].get_x() + patches[i].get_width()/2
+   y = patches[i].get_height()+.05
+   ax.annotate('{:.1f}%'.format(res.val[i]), (x, y), ha='center')
+
+plt.title('Features sorted by importance:')
+plt.ylabel("Percentage of Importance(%)")
+plt.xticks(rotation=90)
+plt.show()
+
+print("\nFrom this model we can see that the most important feature for\
+ passenger satisfection is online baording fascility followed by inflight\
+ wifi service and legroom service. Weirdly, seat comfort is having the least\
+ importance. \nOverall, the model test accuracy is not that satisfecory. Let's\
+ build another model with the top 5 important features from here.")
+
+#%%
+############################################################################
+# TREE 4
+############################################################################
+
+
+# cols = df2[['inflight_wifi_service', 'departure_arrival_time_convenient', 'gate_location', 'online_boarding', 'inflight_entertainment', 'onboard_service','leg_room_service','baggage_handling','checkin_service', 'cleanliness']]
+cols = dfn[['inflight_wifi_service', 'departure_arrival_time_convenient', 'online_boarding', 'inflight_entertainment', 'leg_room_service']]
+x = cols.values
+y = dfn['satisfaction'].values
+
+x_train, x_test, y_train, y_test = train_test_split (x, y, test_size=0.2, random_state=44)
+print("The training data size is : {} ".format(x_train.shape))
+print("The test data size is : {} ".format(x_test.shape))
+
+#%%
+
+# Instantiate dtree
+tree4 = DecisionTreeClassifier(max_depth=None,criterion='entropy',class_weight='balanced')
+# Fit dt to the training set
+clf4 = tree4.fit(x_train,y_train)
+y_train_pred = tree4.predict(x_train)
+y_test_pred = tree4.predict(x_test)
+
+# Evaluate train-set accuracy
+print('train set evaluation: ')
+print("Accuracy score: ",accuracy_score(y_train, y_train_pred))
+print("Confusion Matrix: \n",confusion_matrix(y_train, y_train_pred))
+print("Classification report:\n",classification_report(y_train, y_train_pred))
+
+#%%
+
+# Evaluate test-set accuracy
+print('test set evaluation: ')
+print("Accuracy score: ",accuracy_score(y_test, y_test_pred))
+print("Confusion Matrix: \n",confusion_matrix(y_test, y_test_pred))
+print("Classification report:\n",classification_report(y_test, y_test_pred))
+
+# Tree depth & leafs
+print ('Tree Depth:', tree4.get_depth())
+print ('Tree Leaves:', tree4.get_n_leaves())
+
+print("The train accuracy is 91.84% but the test set accuracy is around 90.9%. \
+ So our leading 5 parameters can predict both the training and test sets to about 91% accuracy,\
+ with tree depth 18, and only 177 leaves.")
+
+
+#%%
+#%%
+# Get most important tree features
+features = cols.columns
+x=len(cols.columns)
+importances = tree4.feature_importances_
+leading_indices = (-importances).argsort()[:x]
+res=pd.DataFrame(columns = ['name','val'])
+
+print ("Features sorted by importance:")
+for i in range (x):
+    name=features[leading_indices[i]]
+    val=round(100*importances[leading_indices[i]],2)
+    res = res.append({'name': name, 'val':val},ignore_index=True)
+    print (i+1, features[leading_indices[i]], round(100*importances[leading_indices[i]],2), '%')
+
+plt.figure(figsize=(5, 4))
+ax = sns.barplot(x='name',y='val', data=res)
+patches = ax.patches
+for i in range(len(patches)):
+   x = patches[i].get_x() + patches[i].get_width()/2
+   y = patches[i].get_height()+.05
+   ax.annotate('{:.1f}%'.format(res.val[i]), (x, y), ha='center')
+
+plt.title('Features sorted by importance:')
+plt.ylabel("Percentage of Importance(%)")
+plt.xticks(rotation=90)
+plt.show()
+
+print("Overall online boarding and inflight wifi service are covering the major importance.\
+Together they are covering more than 70% of importance. ")
+
+#%%
+############################################################################
+# TREE 5
+############################################################################
+
+print("Now we are making a final tree with depth 3 just for visualization purpose.")
+
+# cols = df2[['inflight_wifi_service', 'departure_arrival_time_convenient', 'gate_location', 'online_boarding', 'inflight_entertainment', 'onboard_service','leg_room_service','baggage_handling','checkin_service', 'cleanliness']]
+cols = dfn[['inflight_wifi_service', 'departure_arrival_time_convenient', 'online_boarding', 'inflight_entertainment', 'leg_room_service']]
+x = cols.values
+y = dfn['satisfaction'].values
+
+x_train, x_test, y_train, y_test = train_test_split (x, y, test_size=0.2, random_state=44)
+print("The training data size is : {} ".format(x_train.shape))
+print("The test data size is : {} ".format(x_test.shape))
+
+#%%
+
+# Instantiate dtree
+tree5 = DecisionTreeClassifier(max_depth=3,criterion='entropy',class_weight='balanced')
+# Fit dt to the training set
+clf5 = tree5.fit(x_train,y_train)
+y_train_pred = tree5.predict(x_train)
+y_test_pred = tree5.predict(x_test)
+
+# Evaluate train-set accuracy
+print('train set evaluation: ')
+print("Accuracy score: ",accuracy_score(y_train, y_train_pred))
+print("Confusion Matrix: \n",confusion_matrix(y_train, y_train_pred))
+print("Classification report:\n",classification_report(y_train, y_train_pred))
+
+#%%
+
+# Evaluate test-set accuracy
+print('test set evaluation: ')
+print("Accuracy score: ",accuracy_score(y_test, y_test_pred))
+print("Confusion Matrix: \n",confusion_matrix(y_test, y_test_pred))
+print("Classification report:\n",classification_report(y_test, y_test_pred))
+
+# Tree depth & leafs
+print ('Tree Depth:', tree5.get_depth())
+print ('Tree Leaves:', tree5.get_n_leaves())
+
+print("The train accuracy is 84.4% but the test set accuracy is around 83.8%. \
+ So our leading 4 parameters can predict both the training and test sets to about 84% accuracy,\
+ with tree depth 3, and only 8 leaves. But overall, this isn't a good model to predict accurately.")
+
+
+#%%
+# Get most important tree features
+features = cols.columns
+x=len(cols.columns)
+importances = tree5.feature_importances_
+leading_indices = (-importances).argsort()[:x]
+res=pd.DataFrame(columns = ['name','val'])
+
+print ("Features sorted by importance:")
+for i in range (x):
+    name=features[leading_indices[i]]
+    val=round(100*importances[leading_indices[i]],2)
+    res = res.append({'name': name, 'val':val},ignore_index=True)
+    print (i+1, features[leading_indices[i]], round(100*importances[leading_indices[i]],2), '%')
+
+plt.figure(figsize=(6, 4))
+ax = sns.barplot(x='name',y='val', data=res)
+patches = ax.patches
+for i in range(len(patches)):
+   x = patches[i].get_x() + patches[i].get_width()/2
+   y = patches[i].get_height()+.05
+   ax.annotate('{:.1f}%'.format(res.val[i]), (x, y), ha='center')
+
+plt.title('Features sorted by importance:')
+plt.ylabel("Percentage of Importance(%)")
+plt.xticks(rotation=90)
+plt.show()
+print("Now online boarding by itself covering the major importance of more than 50% alone.")
+
+
+#%%[markdown]
+# 
+
+
+# While precision refers to the percentage of our results which are relevant,
+# recall refers to the percentage of total relevant results correctly classified by our algorithm.
+# Under this paradigm, having high Precision will be more important for our business
+# problem. To correctly identify the crucial factors leading to customer satisfaction,
+# the model prediction of the positive class, ‘Satisfied’ needs to be very reliable.
+#
+# For that we think the best decision tree would be the one with 5 most important features
+# It has 89% test precision and 91% recall rate.
+#
+# The most important features to focous on is Online Boarding and Inflight Wi-Fi service.
+# Moreover, as we found out before these 2 features aren't having good average rating as well.
+# Online boarding rating is 3.25 and Inflight Wi-Fi is having only 2.73 ratings.
+#
+# So Airlines should focus on these 2 features at first to get better customer satisfaction.
+
+#%%
+################################################################################################
+#%%
+# # Graphing the tree
+# from sklearn.tree import export_graphviz  
+  
+# # export the decision tree to a tree.dot file 
+# # for visualizing the plot easily anywhere 
+
+# filename = 'tree1'
+# # import os
+# # print(os.getcwd())
+# export_graphviz(tree1, out_file = filename + '.dot' , feature_names =df2.columns[:-1]) 
+
+# #%%
+# import pydot
+# (graph,) = pydot.graph_from_dot_file('tree1.dot')
+# graph.write_png(filename+'.png')
 
 #%%
 
@@ -666,8 +1170,463 @@ print("Here looks like more females of age between 20-30 are a bit more unsatisf
 # Exploring through classification and modeliing                                                           #
 ############################################################################################################
 
-# 2. What factors have a strong correlation to loyal customers? 
+# 2. What factors mostly lead to loyal customers? 
 
-# (Jinbo part)
+print("Now we want to find out the loyal customers. We are again doing decision tree\
+ classifier to find what features make loyal customers.")
+
+# #%%
+# import os
+# import numpy as np
+# import pandas as pd
+# import matplotlib.pyplot as plt
+# import seaborn as sns
+from sklearn.model_selection import cross_val_score
+# from sklearn.model_selection import train_test_split
+# from sklearn.metrics import accuracy_score
+# from sklearn.metrics import confusion_matrix 
+# from sklearn.metrics import classification_report
+# from sklearn.tree import DecisionTreeClassifier
+# from sklearn import tree
+# from sklearn.tree import export_graphviz  
+
+
+# #%%
+# dirpath = os.getcwd() 
+# filepath = os.path.join( dirpath ,'airline_passenger_satisfaction.csv')
+# df = pd.read_csv(filepath, index_col=[0]) 
+
+
+# # %%
+# print("data shape: ")
+# df.shape
+# df.dtypes
+
+
+# # %%
+# #df.describe()
+# df.head()
+
+# # %%
+# #check na values and delete na values
+# df.isnull().sum()
+# df=df.dropna()
+
+# %%
+# smart question 3: What factors have a strong correlation to loyal customers? 
+
+# We need to change some categorical variables to numerical variables for the model. 
+df2=df.copy()
+replace_map = {'Gender': {'Male': 0,'Female': 1 },
+                        'customer_type': {'disloyal Customer': 0,'Loyal Customer': 1},
+                        'type_of_travel': {'Personal Travel': 0,'Business travel': 1},
+                        'customer_class': {'Eco': 0,'Eco Plus': 1 , 'Business': 2},
+                        'satisfaction': {'neutral or dissatisfied': 0,'satisfied': 1}
+}
+
+df2.replace(replace_map, inplace=True)
+#%%
+df3 = df2.drop('customer_type',axis=1)
+cols = df3.iloc[:,:]
+cols
+
+x = cols.values
+y = df2['customer_type'].values
+
+x_train, x_test, y_train, y_test = train_test_split (x, y, test_size=0.2, random_state=1)
+print("The training data size is : {} ".format(x_train.shape))
+print("The test data size is : {} ".format(x_test.shape))
+
+tree1 = DecisionTreeClassifier(max_depth=None,criterion='entropy')
+
+clf = tree1.fit(x_train,y_train)
+y_train_pred = tree1.predict(x_train)
+y_test_pred = tree1.predict(x_test)
 
 #%%
+# Evaluate train-set accuracy
+print('train set evaluation: ')
+print("Accuracy score: ",accuracy_score(y_train, y_train_pred))
+print("Confusion Matrix: \n",confusion_matrix(y_train, y_train_pred))
+print("Classification report:\n",classification_report(y_train, y_train_pred))
+
+#%%
+# Evaluate test-set accuracy
+print('test set evaluation: ')
+print("Accuracy score: ",accuracy_score(y_test, y_test_pred))
+print("Confusion Matrix: \n",confusion_matrix(y_test, y_test_pred))
+print("Classification report: \n ",classification_report(y_test, y_test_pred))
+
+# Tree depth & leafs
+print ('Tree Depth:', tree1.get_depth())
+print ('Tree Leaves:', tree1.get_n_leaves())
+
+print("The train accuracy is 100% but the test accuracy is around 97%. \
+ The tree has too many featues. Let's find out the which features have more importance.")
+
+#%%
+# Get most important tree features
+features = cols.columns
+importances = tree1.feature_importances_
+leading_indices = (-importances).argsort()[:22]
+print ("Features sorted by importance:")
+for i in range (22):
+    print (i+1, features[leading_indices[i]], round(100*importances[leading_indices[i]],2), '%')
+
+
+#####################################################################################################
+# TREE 2
+#####################################################################################################
+#%%
+
+print("From here let's build a new model with the top 5 important features.")
+
+
+cols = df2[['flight_distance', 'type_of_travel', 'age', 'satisfaction', 'departure_arrival_time_convenient']]
+x = cols.values
+y = df2['customer_type'].values
+
+x_train, x_test, y_train, y_test = train_test_split (x, y, test_size=0.2, random_state=1)
+print("The training data size is : {} ".format(x_train.shape))
+print("The test data size is : {} ".format(x_test.shape))
+
+tree2 = DecisionTreeClassifier(max_depth=None,criterion='entropy')
+
+clf2 = tree2.fit(x_train,y_train)
+y_train_pred = tree2.predict(x_train)
+y_test_pred = tree2.predict(x_test)
+
+#%%
+# Evaluate train-set accuracy
+print('train set evaluation: ')
+print("Accuracy score: ",accuracy_score(y_train, y_train_pred))
+print("Confusion Matrix: \n",confusion_matrix(y_train, y_train_pred))
+print("Classification report:\n",classification_report(y_train, y_train_pred))
+
+#%%
+# Evaluate test-set accuracy
+print('test set evaluation: ')
+print("Accuracy score: ",accuracy_score(y_test, y_test_pred))
+print("Confusion Matrix: \n",confusion_matrix(y_test, y_test_pred))
+print("Classification report: \n ",classification_report(y_test, y_test_pred))
+
+# Tree depth & leafs
+print ('Tree Depth:', tree2.get_depth())
+print ('Tree Leaves:', tree2.get_n_leaves())
+
+print("The train accuracy is 88% but the test accuracy is around 99%. I don't think it is a good model")
+
+
+#%%
+#################################################################################
+# TREE 3
+####################################################################################
+
+# only keep the relevant variables
+
+print("Now we'd be making another model with the columns that represents airlines reviews so that,\
+ we can actually find out the important factors of passenger satisfection. The features are: \
+ \n1. inflight_wifi_service\
+ \n2. departure_arrival_time_convenient\
+ \n3. ease_of_online_booking \
+ \n4. gate_location\
+ \n5. food_and_drink \
+ \n6. online_boarding \
+ \n7. seat_comfort  \
+ \n8. inflight_entertainment \
+ \n9. onboard_service \
+ \n10. leg_room_service \
+ \n11. baggage_handling \
+ \n12. checkin_service  \
+ \n13. inflight_service\
+ \n14. cleanliness")
+
+
+cols = df2[['inflight_wifi_service', 'departure_arrival_time_convenient', 'ease_of_online_booking', 'gate_location', 'food_and_drink', 'online_boarding', 'seat_comfort','inflight_entertainment', 'onboard_service','leg_room_service','baggage_handling','checkin_service', 'inflight_service', 'cleanliness']]
+
+
+# %%
+x = cols.values
+y = df2['customer_type'].values
+
+x_train, x_test, y_train, y_test = train_test_split (x, y, test_size=0.2, random_state=1)
+print("The training data size is : {} ".format(x_train.shape))
+print("The test data size is : {} ".format(x_test.shape))
+
+# %%
+tree3 = DecisionTreeClassifier(max_depth=None,criterion='entropy')
+
+clf3 = tree3.fit(x_train,y_train)
+y_train_pred = tree3.predict(x_train)
+y_test_pred = tree3.predict(x_test)
+
+# train set
+print('train set evaluation: ')
+print("Score: ",accuracy_score(y_train, y_train_pred))
+print("Confusion Matrix: \n",confusion_matrix(y_train, y_train_pred))
+print("Classification report:\n",classification_report(y_train, y_train_pred))
+
+# %%
+# test set
+print('test set evaluation: ')
+print("Accuracy score: ",accuracy_score(y_test, y_test_pred))
+print("Confusion Matrix: \n",confusion_matrix(y_test, y_test_pred))
+print("Classification report:\n",classification_report(y_test, y_test_pred))
+
+# Tree depth & leafs
+print ('Tree Depth:', tree3.get_depth())
+print ('Tree Leaves:', tree3.get_n_leaves())
+print("The test accuracy is 86.21% but the train set accuracy is around 99.29%. \
+ The tree has too many featues. Let's find out the which features have more importance.")
+
+#%%
+# Get most important tree features
+features = cols.columns
+importances = tree3.feature_importances_
+leading_indices = (-importances).argsort()[:14]
+print ("Features sorted by importance:")
+for i in range (14):
+    print (i+1, features[leading_indices[i]], round(100*importances[leading_indices[i]],2), '%')
+
+
+#%%
+############################################################################
+# TREE 4
+############################################################################
+
+# tree with top 6 important features
+print("From here let's build a new model with the top 6 important features.")
+
+cols = df2[['departure_arrival_time_convenient', 'ease_of_online_booking', 'online_boarding', 'gate_location', 'leg_room_service', 'checkin_service']]
+x = cols.values
+y = df2['customer_type'].values
+
+x_train, x_test, y_train, y_test = train_test_split (x, y, test_size=0.2, random_state=1)
+print("The training data size is : {} ".format(x_train.shape))
+print("The test data size is : {} ".format(x_test.shape))
+
+#%%
+tree4 = DecisionTreeClassifier(max_depth=None,criterion='entropy')
+
+clf4 = tree4.fit(x_train,y_train)
+y_train_pred = tree4.predict(x_train)
+y_test_pred = tree4.predict(x_test)
+
+# train set
+print('train set evaluation: ')
+print("Score: ",accuracy_score(y_train, y_train_pred))
+print("Confusion Matrix: \n",confusion_matrix(y_train, y_train_pred))
+print("Classification report:\n",classification_report(y_train, y_train_pred))
+
+# %%
+# test set
+print('test set evaluation: ')
+print("Score: ",accuracy_score(y_test, y_test_pred))
+print("Confusion Matrix: \n",confusion_matrix(y_test, y_test_pred))
+print("Classification report:\n",classification_report(y_test, y_test_pred))
+
+# Tree depth & leafs
+print ('Tree Depth:', tree4.get_depth())
+print ('Tree Leaves:', tree4.get_n_leaves())
+print("The test accuracy is 88.34% but the train set accuracy is around 90.10%.")
+
+#%%
+# Get most important tree features
+features = cols.columns
+importances = tree4.feature_importances_
+leading_indices = (-importances).argsort()[:6]
+print ("Features sorted by importance:")
+for i in range (6):
+    print (i+1, features[leading_indices[i]], round(100*importances[leading_indices[i]],2), '%')
+
+
+#%%
+############################################################################
+# TREE 5
+############################################################################
+
+# tree with top 5 important features
+print("From here let's build a new model with the top 5 important features.")
+
+cols = df2[['departure_arrival_time_convenient', 'ease_of_online_booking', 'online_boarding', 'gate_location', 'checkin_service']]
+x = cols.values
+y = df2['customer_type'].values
+
+x_train, x_test, y_train, y_test = train_test_split (x, y, test_size=0.2, random_state=1)
+print("The training data size is : {} ".format(x_train.shape))
+print("The test data size is : {} ".format(x_test.shape))
+
+#%%
+tree5 = DecisionTreeClassifier(max_depth=None,criterion='entropy')
+
+clf5 = tree5.fit(x_train,y_train)
+y_train_pred = tree5.predict(x_train)
+y_test_pred = tree5.predict(x_test)
+
+# train set
+print('train set evaluation: ')
+print("Score: ",accuracy_score(y_train, y_train_pred))
+print("Confusion Matrix: \n",confusion_matrix(y_train, y_train_pred))
+print("Classification report:\n",classification_report(y_train, y_train_pred))
+
+# %%
+# test set
+print('test set evaluation: ')
+print("Score: ",accuracy_score(y_test, y_test_pred))
+print("Confusion Matrix: \n",confusion_matrix(y_test, y_test_pred))
+print("Classification report:\n",classification_report(y_test, y_test_pred))
+
+# Tree depth & leafs
+print ('Tree Depth:', tree5.get_depth())
+print ('Tree Leaves:', tree5.get_n_leaves())
+print("The test accuracy is 88.97% but the train set accuracy is around 89.49%.")
+
+#%%
+# Get most important tree features
+features = cols.columns
+importances = tree5.feature_importances_
+leading_indices = (-importances).argsort()[:5]
+print ("Features sorted by importance:")
+for i in range (5):
+    print (i+1, features[leading_indices[i]], round(100*importances[leading_indices[i]],2), '%')
+
+
+#%%
+# Find depth via Cross-Validation
+
+def run_cross_validation_on_trees(x, y, tree_depths, cv=5, scoring='accuracy'):
+    cv_scores_list = []
+    cv_scores_std = []
+    cv_scores_mean = []
+    accuracy_scores = []
+    for depth in tree_depths:
+        tree_model = DecisionTreeClassifier(max_depth=depth)
+        cv_scores = cross_val_score(tree_model, x, y, cv=cv, scoring=scoring)
+        cv_scores_list.append(cv_scores)
+        cv_scores_mean.append(cv_scores.mean())
+        cv_scores_std.append(cv_scores.std())
+        accuracy_scores.append(tree_model.fit(x, y).score(x, y))
+    cv_scores_mean = np.array(cv_scores_mean)
+    cv_scores_std = np.array(cv_scores_std)
+    accuracy_scores = np.array(accuracy_scores)
+    return cv_scores_mean, cv_scores_std, accuracy_scores
+
+
+
+def plot_cross_validation_on_trees(depths, cv_scores_mean, cv_scores_std, accuracy_scores, title):
+    fig, ax = plt.subplots(1,1, figsize=(15,5))
+    ax.plot(depths, cv_scores_mean, '-o', label='mean cross-validation accuracy', alpha=0.9)
+    ax.fill_between(depths, cv_scores_mean-2*cv_scores_std, cv_scores_mean+2*cv_scores_std, alpha=0.2)
+    ylim = plt.ylim()
+    ax.plot(depths, accuracy_scores, '-*', label='train accuracy', alpha=0.9)
+    ax.set_title(title, fontsize=16)
+    ax.set_xlabel('Tree depth', fontsize=14)
+    ax.set_ylabel('Accuracy', fontsize=14)
+    ax.set_ylim(ylim)
+    ax.set_xticks(depths)
+    ax.legend()
+
+sm_tree_depths = range(1,18)
+sm_cv_scores_mean, sm_cv_scores_std, sm_accuracy_scores = run_cross_validation_on_trees(x_train, y_train, sm_tree_depths)
+
+plot_cross_validation_on_trees(sm_tree_depths, sm_cv_scores_mean, sm_cv_scores_std, sm_accuracy_scores, 
+                               'Accuracy per decision tree depth on training data')
+
+
+
+#%%
+############################################################################
+# TREE 6
+############################################################################
+
+# We can see from the picture above, when depth is 8, it achieves a high average accuracy score. From depth 13, the score is almost same and there is not much improvements
+# in average accuracy score from depth 8 to depth 13. And importantly, in depth 8, the lower bound of the confidence interval of the accuracy is high enough to make the value significant.
+# So I choose depth 8 to build the model. 
+
+print("Now we are making a final tree with depth 8.")
+
+cols = df2[['departure_arrival_time_convenient', 'ease_of_online_booking', 'online_boarding', 'gate_location', 'checkin_service']]
+x = cols.values
+y = df2['customer_type'].values
+
+x_train, x_test, y_train, y_test = train_test_split (x, y, test_size=0.2, random_state=1)
+print("The training data size is : {} ".format(x_train.shape))
+print("The test data size is : {} ".format(x_test.shape))
+
+#%%
+tree6 = DecisionTreeClassifier(max_depth=8,criterion='entropy')
+
+clf6 = tree6.fit(x_train,y_train)
+y_train_pred = tree6.predict(x_train)
+y_test_pred = tree6.predict(x_test)
+
+# train set
+print('train set evaluation: ')
+print("Score: ",accuracy_score(y_train, y_train_pred))
+print("Confusion Matrix: \n",confusion_matrix(y_train, y_train_pred))
+print("Classification report:\n",classification_report(y_train, y_train_pred))
+
+# %%
+# test set
+print('test set evaluation: ')
+print("Score: ",accuracy_score(y_test, y_test_pred))
+print("Confusion Matrix: \n",confusion_matrix(y_test, y_test_pred))
+print("Classification report:\n",classification_report(y_test, y_test_pred))
+
+# Tree depth & leafs
+print ('Tree Depth:', tree6.get_depth())
+print ('Tree Leaves:', tree6.get_n_leaves())
+print("The test accuracy is 87.38% but the train set accuracy is around 87.43%.\
+So our leading 5 parameters can predict both the training and test sets to about 87% accuracy,\
+ with tree depth 8, and only 201 leaves.")
+
+#%%
+# Get most important tree features
+features = cols.columns
+importances = tree6.feature_importances_
+leading_indices = (-importances).argsort()[:5]
+print ("Features sorted by importance:")
+for i in range (5):
+    print (i+1, features[leading_indices[i]], round(100*importances[leading_indices[i]],2), '%')
+
+print("Now departure_arrival_time_convenient and ease_of_online_booking covering the major importance of more than 50% together.")
+
+
+
+
+
+#%%
+# # Graphing the tree
+# from sklearn.tree import export_graphviz  
+
+# filename = 'tree6'
+# import os
+# print(os.getcwd())
+# export_graphviz(tree6, out_file = filename + '.dot' , feature_names =cols.columns) 
+
+
+#%%[markdown]
+# Conclusions:
+#
+# We found out from the EDA that:-
+#
+# * Most satisfied age group is 41-50.
+# * Airlines should make flight more comfortable for children and 70+ passengers
+# * Female age between age 20-30 seems less satisfied than male
+# * Arrival/departure delays have small effect on passenger satisfaction
+# * Airlines needs to make economy class better
+# * Airlines need to improve themself to satisfy business passengers as well because they are paying more than others
+# * Overall ratings aren't that satisfactory as all of them are somewhat neutral. 
+# Inflight WiFi service is having the lowest rating and inflight service the highest.
+#
+#
+# Form our Classification Modellings we can conclude that:-
+#
+# * Online boarding and inflight wifi service are covering the major importance on customer satisfaction
+# Airlines should highly focus on inflight wi-fi experience.
+# * Departure/Arrival time convenient and ease of online booking makes more loyal customer.
+# Airlines should keep improving these features to hold onto the loyal customers.
+
+
+
+# %%
