@@ -6,7 +6,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from seaborn.palettes import color_palette
-plt.style.use('fivethirtyeight')
+# plt.style.use('fivethirtyeight')
 
 #%%
 dirpath = os.getcwd() # print("current directory is : " + dirpath)
@@ -608,7 +608,7 @@ sns.countplot(x ='customer_class',hue='satisfaction', palette=['#B70013','#1200A
 plt.title("Passenger Travel Class by satisfaction")
 plt.show()
 
-print("Looks like economy class passengers are not that stisfied with the airlines service")
+print("Looks like economy class passengers are not that stisfied with the airlines service.")
 
 #%%
 
@@ -740,7 +740,8 @@ print("The test data size is : {} ".format(x_test.shape))
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import confusion_matrix 
 from sklearn.metrics import classification_report
-
+from sklearn.metrics import ConfusionMatrixDisplay
+#%%
 #Decision Tree Classifier
 from sklearn.tree import DecisionTreeClassifier
 # Instantiate dtree
@@ -753,7 +754,9 @@ y_test_pred = tree1.predict(x_test)
 # Evaluate train-set accuracy
 print('train set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_train, y_train_pred))
-print("Confusion Matrix: \n",confusion_matrix(y_train, y_train_pred))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds"))
+plt.title("Confusion Matrix of Train Data ")
+plt.show()
 print("Classification report:\n",classification_report(y_train, y_train_pred))
 
 #%%
@@ -761,7 +764,9 @@ print("Classification report:\n",classification_report(y_train, y_train_pred))
 # Evaluate test-set accuracy
 print('test set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_test, y_test_pred))
-print("Confusion Matrix: \n",confusion_matrix(y_test, y_test_pred))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues"))
+plt.title("Confusion Matrix of Test Data ")
+plt.show()
 print("Classification report: \n ",classification_report(y_test, y_test_pred))
 
 # Tree depth & leafs
@@ -799,7 +804,8 @@ plt.title('Features sorted by importance:')
 plt.ylabel("Percentage of Importance(%)")
 plt.xticks(rotation=90)
 plt.show()
-# add a graph
+
+print("Online boarding is having the highest imporance follwed by onboard wifi service.")
 
 #####################################################################################################
 # TREE 2
@@ -829,7 +835,9 @@ y_test_pred = tree2.predict(x_test)
 # Evaluate train-set accuracy
 print('train set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_train, y_train_pred))
-print("Confusion Matrix: \n",confusion_matrix(y_train, y_train_pred))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds"))
+plt.title("Confusion Matrix of Train Data ")
+plt.show()
 print("Classification report:\n",classification_report(y_train, y_train_pred))
 
 #%%
@@ -837,7 +845,9 @@ print("Classification report:\n",classification_report(y_train, y_train_pred))
 # Evaluate test-set accuracy
 print('test set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_test, y_test_pred))
-print("Confusion Matrix: \n",confusion_matrix(y_test, y_test_pred))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues"))
+plt.title("Confusion Matrix of Test Data ")
+plt.show()
 print("Classification report:\n",classification_report(y_test, y_test_pred))
 
 # Tree depth & leafs
@@ -873,6 +883,8 @@ plt.title('Features sorted by importance:')
 plt.ylabel("Percentage of Importance(%)")
 plt.xticks(rotation=90)
 plt.show()
+
+print("Among the top 6 features checkin_service is having the least importance.")
 
 #%%
 #################################################################################
@@ -917,14 +929,18 @@ y_test_pred = tree3.predict(x_test)
 # Evaluate train-set accuracy
 print('train set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_train, y_train_pred))
-print("Confusion Matrix: \n",confusion_matrix(y_train, y_train_pred))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds"))
+plt.title("Confusion Matrix of Train Data ")
+plt.show()
 print("Classification report:\n",classification_report(y_train, y_train_pred))
 
 #%%
 # Evaluate test-set accuracy
 print('test set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_test, y_test_pred))
-print("Confusion Matrix: \n",confusion_matrix(y_test, y_test_pred))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues"))
+plt.title("Confusion Matrix of Test Data ")
+plt.show()
 print("Classification report:\n",classification_report(y_test, y_test_pred))
 
 # Tree depth & leafs
@@ -996,7 +1012,9 @@ y_test_pred = tree4.predict(x_test)
 # Evaluate train-set accuracy
 print('train set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_train, y_train_pred))
-print("Confusion Matrix: \n",confusion_matrix(y_train, y_train_pred))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds"))
+plt.title("Confusion Matrix of Train Data ")
+plt.show()
 print("Classification report:\n",classification_report(y_train, y_train_pred))
 
 #%%
@@ -1004,14 +1022,16 @@ print("Classification report:\n",classification_report(y_train, y_train_pred))
 # Evaluate test-set accuracy
 print('test set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_test, y_test_pred))
-print("Confusion Matrix: \n",confusion_matrix(y_test, y_test_pred))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues"))
+plt.title("Confusion Matrix of Test Data ")
+plt.show()
 print("Classification report:\n",classification_report(y_test, y_test_pred))
 
 # Tree depth & leafs
 print ('Tree Depth:', tree4.get_depth())
 print ('Tree Leaves:', tree4.get_n_leaves())
 
-print("The train accuracy is 91.84% but the test set accuracy is around 90.9%. \
+print("The train accuracy is 91.84% but the test set accuracy is around 90.9%.\
  So our leading 5 parameters can predict both the training and test sets to about 91% accuracy,\
  with tree depth 18, and only 177 leaves.")
 
@@ -1045,7 +1065,7 @@ plt.ylabel("Percentage of Importance(%)")
 plt.xticks(rotation=90)
 plt.show()
 
-print("Overall online boarding and inflight wifi service are covering the major importance.\
+print("Overall, online boarding and inflight wifi service are covering the major importance.\
 Together they are covering more than 70% of importance. ")
 
 #%%
@@ -1076,7 +1096,9 @@ y_test_pred = tree5.predict(x_test)
 # Evaluate train-set accuracy
 print('train set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_train, y_train_pred))
-print("Confusion Matrix: \n",confusion_matrix(y_train, y_train_pred))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds"))
+plt.title("Confusion Matrix of Test Data ")
+plt.show()
 print("Classification report:\n",classification_report(y_train, y_train_pred))
 
 #%%
@@ -1084,7 +1106,9 @@ print("Classification report:\n",classification_report(y_train, y_train_pred))
 # Evaluate test-set accuracy
 print('test set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_test, y_test_pred))
-print("Confusion Matrix: \n",confusion_matrix(y_test, y_test_pred))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues"))
+plt.title("Confusion Matrix of Test Data ")
+plt.show()
 print("Classification report:\n",classification_report(y_test, y_test_pred))
 
 # Tree depth & leafs
@@ -1139,7 +1163,7 @@ print("Now online boarding by itself covering the major importance of more than 
 # For that we think the best decision tree would be the one with 5 most important features
 # It has 89% test precision and 91% recall rate.
 #
-# The most important features to focous on is Online Boarding and Inflight Wi-Fi service.
+# The most important features to focus on is Online Boarding and Inflight Wi-Fi service.
 # Moreover, as we found out before these 2 features aren't having good average rating as well.
 # Online boarding rating is 3.25 and Inflight Wi-Fi is having only 2.73 ratings.
 #
@@ -1172,7 +1196,8 @@ print("Now online boarding by itself covering the major importance of more than 
 
 # 2. What factors mostly lead to loyal customers? 
 
-print("Now we want to find out the loyal customers. We are again doing decision tree\
+print("Now we want to find out the loyal customers. What features impresses them that they prefer\
+this airlines. We are again doing decision tree\
  classifier to find what features make loyal customers.")
 
 # #%%
@@ -1247,14 +1272,18 @@ y_test_pred = tree1.predict(x_test)
 # Evaluate train-set accuracy
 print('train set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_train, y_train_pred))
-print("Confusion Matrix: \n",confusion_matrix(y_train, y_train_pred))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds"))
+plt.title("Confusion Matrix of Train Data ")
+plt.show()
 print("Classification report:\n",classification_report(y_train, y_train_pred))
 
 #%%
 # Evaluate test-set accuracy
 print('test set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_test, y_test_pred))
-print("Confusion Matrix: \n",confusion_matrix(y_test, y_test_pred))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues"))
+plt.title("Confusion Matrix of Test Data ")
+plt.show()
 print("Classification report: \n ",classification_report(y_test, y_test_pred))
 
 # Tree depth & leafs
@@ -1265,13 +1294,39 @@ print("The train accuracy is 100% but the test accuracy is around 97%. \
  The tree has too many featues. Let's find out the which features have more importance.")
 
 #%%
+
 # Get most important tree features
 features = cols.columns
+x=len(cols.columns)
 importances = tree1.feature_importances_
-leading_indices = (-importances).argsort()[:22]
+leading_indices = (-importances).argsort()[:x]
+res=pd.DataFrame(columns = ['name','val'])
+
 print ("Features sorted by importance:")
-for i in range (22):
+for i in range (x):
+    name=features[leading_indices[i]]
+    val=round(100*importances[leading_indices[i]],2)
+    res = res.append({'name': name, 'val':val},ignore_index=True)
     print (i+1, features[leading_indices[i]], round(100*importances[leading_indices[i]],2), '%')
+
+plt.figure(figsize=(12, 6))
+ax = sns.barplot(x='name',y='val', data=res)
+patches = ax.patches
+for i in range(len(patches)):
+   x = patches[i].get_x() + patches[i].get_width()/2
+   y = patches[i].get_height()+.05
+   ax.annotate('{:.1f}%'.format(res.val[i]), (x, y), ha='center')
+
+plt.title('Features sorted by importance:')
+plt.ylabel("Percentage of Importance(%)")
+plt.xticks(rotation=90)
+plt.show()
+print("This is giving an interesting result, the flight distance is playing the major role for customer loyalty.\
+ Type of travel is having the second highest. As we have seen before, there are two types of travel, business and\
+ personal travel, possibly the airlines can focus on these particular groups by giving vouchers or special discounts.\
+ We can see that satisfaction is having the 4th highest factor for being loyal customer. Which makes sense as satisfaction leads to loyality.")
+
+
 
 
 #####################################################################################################
@@ -1300,21 +1355,26 @@ y_test_pred = tree2.predict(x_test)
 # Evaluate train-set accuracy
 print('train set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_train, y_train_pred))
-print("Confusion Matrix: \n",confusion_matrix(y_train, y_train_pred))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds"))
+plt.title("Confusion Matrix of Test Data ")
+plt.show()
 print("Classification report:\n",classification_report(y_train, y_train_pred))
 
 #%%
 # Evaluate test-set accuracy
 print('test set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_test, y_test_pred))
-print("Confusion Matrix: \n",confusion_matrix(y_test, y_test_pred))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues"))
+plt.title("Confusion Matrix of Test Data ")
+plt.show()
 print("Classification report: \n ",classification_report(y_test, y_test_pred))
 
 # Tree depth & leafs
 print ('Tree Depth:', tree2.get_depth())
 print ('Tree Leaves:', tree2.get_n_leaves())
 
-print("The train accuracy is 88% but the test accuracy is around 99%. I don't think it is a good model")
+print("The train accuracy is 99% but the test accuracy is around 88%.\
+ We don't think it is a good model as the differece of accuracy is pretty high.")
 
 
 #%%
@@ -1363,14 +1423,18 @@ y_test_pred = tree3.predict(x_test)
 # train set
 print('train set evaluation: ')
 print("Score: ",accuracy_score(y_train, y_train_pred))
-print("Confusion Matrix: \n",confusion_matrix(y_train, y_train_pred))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds"))
+plt.title("Confusion Matrix of Train Data ")
+plt.show()
 print("Classification report:\n",classification_report(y_train, y_train_pred))
 
 # %%
 # test set
 print('test set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_test, y_test_pred))
-print("Confusion Matrix: \n",confusion_matrix(y_test, y_test_pred))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues"))
+plt.title("Confusion Matrix of Test Data ")
+plt.show()
 print("Classification report:\n",classification_report(y_test, y_test_pred))
 
 # Tree depth & leafs
@@ -1381,12 +1445,37 @@ print("The test accuracy is 86.21% but the train set accuracy is around 99.29%. 
 
 #%%
 # Get most important tree features
+# Get most important tree features
 features = cols.columns
+x=len(cols.columns)
 importances = tree3.feature_importances_
-leading_indices = (-importances).argsort()[:14]
+leading_indices = (-importances).argsort()[:x]
+res=pd.DataFrame(columns = ['name','val'])
+
 print ("Features sorted by importance:")
-for i in range (14):
+for i in range (x):
+    name=features[leading_indices[i]]
+    val=round(100*importances[leading_indices[i]],2)
+    res = res.append({'name': name, 'val':val},ignore_index=True)
     print (i+1, features[leading_indices[i]], round(100*importances[leading_indices[i]],2), '%')
+
+plt.figure(figsize=(10, 6))
+ax = sns.barplot(x='name',y='val', data=res)
+patches = ax.patches
+for i in range(len(patches)):
+   x = patches[i].get_x() + patches[i].get_width()/2
+   y = patches[i].get_height()+.05
+   ax.annotate('{:.1f}%'.format(res.val[i]), (x, y), ha='center')
+
+plt.title('Features sorted by importance:')
+plt.ylabel("Percentage of Importance(%)")
+plt.xticks(rotation=90)
+plt.show()
+print("Now we can see departure arrival time convenient is having the highest importance followed by\
+ ease of online booking and online boarding. Whereas food and drink and cleanliness is having the least importance.\
+ Looks like the convenience of air trips is having a major impact. As the technology as advanced and life schedule has become\
+ very congested, passengers are giving more importance to the outside airplane services than inside/in-cabin services.\
+ These three features are high enough to save a lot of time and give a more convenient schedule for the day.")
 
 
 #%%
@@ -1415,29 +1504,54 @@ y_test_pred = tree4.predict(x_test)
 # train set
 print('train set evaluation: ')
 print("Score: ",accuracy_score(y_train, y_train_pred))
-print("Confusion Matrix: \n",confusion_matrix(y_train, y_train_pred))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds"))
+plt.title("Confusion Matrix of Train Data ")
+plt.show()
 print("Classification report:\n",classification_report(y_train, y_train_pred))
 
 # %%
 # test set
 print('test set evaluation: ')
 print("Score: ",accuracy_score(y_test, y_test_pred))
-print("Confusion Matrix: \n",confusion_matrix(y_test, y_test_pred))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues"))
+plt.title("Confusion Matrix of Test Data ")
+plt.show()
 print("Classification report:\n",classification_report(y_test, y_test_pred))
 
 # Tree depth & leafs
 print ('Tree Depth:', tree4.get_depth())
 print ('Tree Leaves:', tree4.get_n_leaves())
-print("The test accuracy is 88.34% but the train set accuracy is around 90.10%.")
+print("The test accuracy is 88.34% and the train set accuracy is around 90.10%. It is a good model.")
 
 #%%
 # Get most important tree features
 features = cols.columns
+x=len(cols.columns)
 importances = tree4.feature_importances_
-leading_indices = (-importances).argsort()[:6]
+leading_indices = (-importances).argsort()[:x]
+res=pd.DataFrame(columns = ['name','val'])
+
 print ("Features sorted by importance:")
-for i in range (6):
+for i in range (x):
+    name=features[leading_indices[i]]
+    val=round(100*importances[leading_indices[i]],2)
+    res = res.append({'name': name, 'val':val},ignore_index=True)
     print (i+1, features[leading_indices[i]], round(100*importances[leading_indices[i]],2), '%')
+
+plt.figure(figsize=(6, 4))
+ax = sns.barplot(x='name',y='val', data=res)
+patches = ax.patches
+for i in range(len(patches)):
+   x = patches[i].get_x() + patches[i].get_width()/2
+   y = patches[i].get_height()+.05
+   ax.annotate('{:.1f}%'.format(res.val[i]), (x, y), ha='center')
+
+plt.title('Features sorted by importance:')
+plt.ylabel("Percentage of Importance(%)")
+plt.xticks(rotation=90)
+plt.show()
+print("Now online boarding by itself covering the major importance of more than 50% alone. Let's\
+ make another tree with top 5 features.")
 
 
 #%%
@@ -1466,33 +1580,58 @@ y_test_pred = tree5.predict(x_test)
 # train set
 print('train set evaluation: ')
 print("Score: ",accuracy_score(y_train, y_train_pred))
-print("Confusion Matrix: \n",confusion_matrix(y_train, y_train_pred))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds"))
+plt.title("Confusion Matrix of Train Data ")
+plt.show()
 print("Classification report:\n",classification_report(y_train, y_train_pred))
 
 # %%
 # test set
 print('test set evaluation: ')
 print("Score: ",accuracy_score(y_test, y_test_pred))
-print("Confusion Matrix: \n",confusion_matrix(y_test, y_test_pred))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues"))
+plt.title("Confusion Matrix of Test Data ")
+plt.show()
 print("Classification report:\n",classification_report(y_test, y_test_pred))
 
 # Tree depth & leafs
 print ('Tree Depth:', tree5.get_depth())
 print ('Tree Leaves:', tree5.get_n_leaves())
-print("The test accuracy is 88.97% but the train set accuracy is around 89.49%.")
+print("Even removing 1 feature the test accuracy is still 88.97% but the train set accuracy is around 89.49%.")
 
 #%%
 # Get most important tree features
 features = cols.columns
+x=len(cols.columns)
 importances = tree5.feature_importances_
-leading_indices = (-importances).argsort()[:5]
+leading_indices = (-importances).argsort()[:x]
+res=pd.DataFrame(columns = ['name','val'])
+
 print ("Features sorted by importance:")
-for i in range (5):
+for i in range (x):
+    name=features[leading_indices[i]]
+    val=round(100*importances[leading_indices[i]],2)
+    res = res.append({'name': name, 'val':val},ignore_index=True)
     print (i+1, features[leading_indices[i]], round(100*importances[leading_indices[i]],2), '%')
+
+plt.figure(figsize=(5, 4))
+ax = sns.barplot(x='name',y='val', data=res)
+patches = ax.patches
+for i in range(len(patches)):
+   x = patches[i].get_x() + patches[i].get_width()/2
+   y = patches[i].get_height()+.05
+   ax.annotate('{:.1f}%'.format(res.val[i]), (x, y), ha='center')
+
+plt.title('Features sorted by importance:')
+plt.ylabel("Percentage of Importance(%)")
+plt.xticks(rotation=90)
+plt.show()
+print("Now departure_arrival_time_convenience covering 31% the total model importance.")
 
 
 #%%
 # Find depth via Cross-Validation
+print("Now, we want to find out which depth of the tree would be the best model in this scenario.")
 
 def run_cross_validation_on_trees(x, y, tree_depths, cv=5, scoring='accuracy'):
     cv_scores_list = []
@@ -1539,11 +1678,12 @@ plot_cross_validation_on_trees(sm_tree_depths, sm_cv_scores_mean, sm_cv_scores_s
 # TREE 6
 ############################################################################
 
-# We can see from the picture above, when depth is 8, it achieves a high average accuracy score. From depth 13, the score is almost same and there is not much improvements
-# in average accuracy score from depth 8 to depth 13. And importantly, in depth 8, the lower bound of the confidence interval of the accuracy is high enough to make the value significant.
-# So I choose depth 8 to build the model. 
+print("We can see from the picture above, when depth is 8, it achieves a high average accuracy score.\
+ From depth 13, the score is almost same and there is not much improvements in average accuracy score\
+ from depth 8 to depth 13. And importantly, in depth 8, the lower bound of the confidence interval of\
+ the accuracy is high enough to make the value significant. So we are choosing depth 8 to build the model. ")
 
-print("Now we are making a final tree with depth 8.")
+print("Now we are making a final tree with depth 8.\n")
 
 cols = df2[['departure_arrival_time_convenient', 'ease_of_online_booking', 'online_boarding', 'gate_location', 'checkin_service']]
 x = cols.values
@@ -1563,36 +1703,59 @@ y_test_pred = tree6.predict(x_test)
 # train set
 print('train set evaluation: ')
 print("Score: ",accuracy_score(y_train, y_train_pred))
-print("Confusion Matrix: \n",confusion_matrix(y_train, y_train_pred))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds"))
+plt.title("Confusion Matrix of Train Data ")
+plt.show()
 print("Classification report:\n",classification_report(y_train, y_train_pred))
 
 # %%
 # test set
 print('test set evaluation: ')
 print("Score: ",accuracy_score(y_test, y_test_pred))
-print("Confusion Matrix: \n",confusion_matrix(y_test, y_test_pred))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues"))
+plt.title("Confusion Matrix of Test Data ")
+plt.show()
 print("Classification report:\n",classification_report(y_test, y_test_pred))
 
 # Tree depth & leafs
 print ('Tree Depth:', tree6.get_depth())
 print ('Tree Leaves:', tree6.get_n_leaves())
-print("The test accuracy is 87.38% but the train set accuracy is around 87.43%.\
+print("The test accuracy is 87.38% and the train set accuracy is around 87.43%.\
 So our leading 5 parameters can predict both the training and test sets to about 87% accuracy,\
  with tree depth 8, and only 201 leaves.")
 
 #%%
+
 # Get most important tree features
 features = cols.columns
+x=len(cols.columns)
 importances = tree6.feature_importances_
-leading_indices = (-importances).argsort()[:5]
+leading_indices = (-importances).argsort()[:x]
+res=pd.DataFrame(columns = ['name','val'])
+
 print ("Features sorted by importance:")
-for i in range (5):
+for i in range (x):
+    name=features[leading_indices[i]]
+    val=round(100*importances[leading_indices[i]],2)
+    res = res.append({'name': name, 'val':val},ignore_index=True)
     print (i+1, features[leading_indices[i]], round(100*importances[leading_indices[i]],2), '%')
 
-print("Now departure_arrival_time_convenient and ease_of_online_booking covering the major importance of more than 50% together.")
+plt.figure(figsize=(6, 4))
+ax = sns.barplot(x='name',y='val', data=res)
+patches = ax.patches
+for i in range(len(patches)):
+   x = patches[i].get_x() + patches[i].get_width()/2
+   y = patches[i].get_height()+.05
+   ax.annotate('{:.1f}%'.format(res.val[i]), (x, y), ha='center')
+
+plt.title('Features sorted by importance:')
+plt.ylabel("Percentage of Importance(%)")
+plt.xticks(rotation=90)
+plt.show()
 
 
-
+print("Now departure_arrival_time_convenient and ease_of_online_booking covering the major importance\
+ of more than 50% together. Checkin_service importancec is having only 1.5% of importance for being loyal customer.")
 
 
 #%%
@@ -1604,7 +1767,9 @@ print("Now departure_arrival_time_convenient and ease_of_online_booking covering
 # print(os.getcwd())
 # export_graphviz(tree6, out_file = filename + '.dot' , feature_names =cols.columns) 
 
-
+#################################################################################################
+#          CONCLUSION                                                                           #
+#################################################################################################
 #%%[markdown]
 # Conclusions:
 #
@@ -1617,16 +1782,34 @@ print("Now departure_arrival_time_convenient and ease_of_online_booking covering
 # * Airlines needs to make economy class better
 # * Airlines need to improve themself to satisfy business passengers as well because they are paying more than others
 # * Overall ratings aren't that satisfactory as all of them are somewhat neutral. 
-# Inflight WiFi service is having the lowest rating and inflight service the highest.
+# * Inflight WiFi service is having the lowest rating and inflight service the highest.
 #
 #
 # Form our Classification Modellings we can conclude that:-
 #
-# * Online boarding and inflight wifi service are covering the major importance on customer satisfaction
-# Airlines should highly focus on inflight wi-fi experience.
+# * Online boarding and inflight wifi service are covering the major importance on customer satisfaction.
+# Airlines should highly focus on inflight Wi-Fi experience as it has lowest rating but high influence on satisfaction..
 # * Departure/Arrival time convenient and ease of online booking makes more loyal customer.
 # Airlines should keep improving these features to hold onto the loyal customers.
+#
+# Best model to predict customer satisfaction: Decision tree with top 5 reviews, 
+# * online_boarding
+# * inflight_wifi_service
+# * leg_room_service
+# * departure_arrival_time_convenient
+# * inflight_entertainment
+# 
+# Both train and test accuracy is around 90%.
+#
+# Best model to predict loyal customers: Decision tree with 5 features and depth predefined as 8.
+# * departure_arrival_time_convenient
+# * ease_of_online_booking
+# * online_boarding
+# * gate_location
+# * checkin_service
+#
+# Both train and test accuracy is around 87%.
 
 
-
-# %%
+#%%
+##################################################################################################
