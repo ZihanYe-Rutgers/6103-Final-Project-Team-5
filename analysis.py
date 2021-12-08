@@ -754,7 +754,7 @@ y_test_pred = tree1.predict(x_test)
 # Evaluate train-set accuracy
 print('train set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_train, y_train_pred))
-print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds"))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds", values_format=""))
 plt.title("Confusion Matrix of Train Data ")
 plt.show()
 print("Classification report:\n",classification_report(y_train, y_train_pred))
@@ -764,7 +764,7 @@ print("Classification report:\n",classification_report(y_train, y_train_pred))
 # Evaluate test-set accuracy
 print('test set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_test, y_test_pred))
-print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues"))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues", values_format=""))
 plt.title("Confusion Matrix of Test Data ")
 plt.show()
 print("Classification report: \n ",classification_report(y_test, y_test_pred))
@@ -835,7 +835,7 @@ y_test_pred = tree2.predict(x_test)
 # Evaluate train-set accuracy
 print('train set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_train, y_train_pred))
-print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds"))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds", values_format=""))
 plt.title("Confusion Matrix of Train Data ")
 plt.show()
 print("Classification report:\n",classification_report(y_train, y_train_pred))
@@ -845,7 +845,7 @@ print("Classification report:\n",classification_report(y_train, y_train_pred))
 # Evaluate test-set accuracy
 print('test set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_test, y_test_pred))
-print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues"))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues", values_format=""))
 plt.title("Confusion Matrix of Test Data ")
 plt.show()
 print("Classification report:\n",classification_report(y_test, y_test_pred))
@@ -929,7 +929,7 @@ y_test_pred = tree3.predict(x_test)
 # Evaluate train-set accuracy
 print('train set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_train, y_train_pred))
-print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds"))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds", values_format=""))
 plt.title("Confusion Matrix of Train Data ")
 plt.show()
 print("Classification report:\n",classification_report(y_train, y_train_pred))
@@ -938,7 +938,7 @@ print("Classification report:\n",classification_report(y_train, y_train_pred))
 # Evaluate test-set accuracy
 print('test set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_test, y_test_pred))
-print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues"))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues", values_format=""))
 plt.title("Confusion Matrix of Test Data ")
 plt.show()
 print("Classification report:\n",classification_report(y_test, y_test_pred))
@@ -1012,7 +1012,7 @@ y_test_pred = tree4.predict(x_test)
 # Evaluate train-set accuracy
 print('train set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_train, y_train_pred))
-print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds"))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds", values_format=""))
 plt.title("Confusion Matrix of Train Data ")
 plt.show()
 print("Classification report:\n",classification_report(y_train, y_train_pred))
@@ -1022,7 +1022,7 @@ print("Classification report:\n",classification_report(y_train, y_train_pred))
 # Evaluate test-set accuracy
 print('test set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_test, y_test_pred))
-print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues"))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues", values_format=""))
 plt.title("Confusion Matrix of Test Data ")
 plt.show()
 print("Classification report:\n",classification_report(y_test, y_test_pred))
@@ -1069,6 +1069,38 @@ print("Overall, online boarding and inflight wifi service are covering the major
 Together they are covering more than 70% of importance. ")
 
 #%%
+# ROC-AUC
+from sklearn.metrics import roc_auc_score, roc_curve
+
+# generate a no skill prediction (majority class)
+ns_probs = [0 for _ in range(len(y_test))]
+# predict probabilities
+lr_probs = clf4.predict_proba(x_test)
+# keep probabilities for the positive outcome only
+lr_probs = lr_probs[:, 1]
+# calculate scores
+ns_auc = roc_auc_score(y_test, ns_probs)
+lr_auc = roc_auc_score(y_test, lr_probs)
+# summarize scores
+print('No Skill: ROC AUC=%.3f' % (ns_auc))
+print('Decision Tree: ROC AUC=%.3f' % (lr_auc))
+# calculate roc curves
+ns_fpr, ns_tpr, _ = roc_curve(y_test, ns_probs)
+lr_fpr, lr_tpr, _ = roc_curve(y_test, lr_probs)
+# plot the roc curve for the model
+plt.plot(ns_fpr, ns_tpr, linestyle='--', label='No Skill')
+plt.plot(lr_fpr, lr_tpr, marker='.', label='Logistic')
+# axis labels
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title("ROC-AUC of the final Decision Tree")
+# show the legend
+plt.legend()
+# show the plot
+plt.show()
+
+print("The score is indicating this model is a very good model to predict customer satisfaction.")
+#%%
 ############################################################################
 # TREE 5
 ############################################################################
@@ -1096,7 +1128,7 @@ y_test_pred = tree5.predict(x_test)
 # Evaluate train-set accuracy
 print('train set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_train, y_train_pred))
-print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds"))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds", values_format=""))
 plt.title("Confusion Matrix of Test Data ")
 plt.show()
 print("Classification report:\n",classification_report(y_train, y_train_pred))
@@ -1272,7 +1304,7 @@ y_test_pred = tree1.predict(x_test)
 # Evaluate train-set accuracy
 print('train set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_train, y_train_pred))
-print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds"))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds", values_format=""))
 plt.title("Confusion Matrix of Train Data ")
 plt.show()
 print("Classification report:\n",classification_report(y_train, y_train_pred))
@@ -1281,7 +1313,7 @@ print("Classification report:\n",classification_report(y_train, y_train_pred))
 # Evaluate test-set accuracy
 print('test set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_test, y_test_pred))
-print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues"))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues", values_format=""))
 plt.title("Confusion Matrix of Test Data ")
 plt.show()
 print("Classification report: \n ",classification_report(y_test, y_test_pred))
@@ -1355,7 +1387,7 @@ y_test_pred = tree2.predict(x_test)
 # Evaluate train-set accuracy
 print('train set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_train, y_train_pred))
-print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds"))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds", values_format=""))
 plt.title("Confusion Matrix of Test Data ")
 plt.show()
 print("Classification report:\n",classification_report(y_train, y_train_pred))
@@ -1364,7 +1396,7 @@ print("Classification report:\n",classification_report(y_train, y_train_pred))
 # Evaluate test-set accuracy
 print('test set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_test, y_test_pred))
-print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues"))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues", values_format=""))
 plt.title("Confusion Matrix of Test Data ")
 plt.show()
 print("Classification report: \n ",classification_report(y_test, y_test_pred))
@@ -1423,7 +1455,7 @@ y_test_pred = tree3.predict(x_test)
 # train set
 print('train set evaluation: ')
 print("Score: ",accuracy_score(y_train, y_train_pred))
-print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds"))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds", values_format=""))
 plt.title("Confusion Matrix of Train Data ")
 plt.show()
 print("Classification report:\n",classification_report(y_train, y_train_pred))
@@ -1432,7 +1464,7 @@ print("Classification report:\n",classification_report(y_train, y_train_pred))
 # test set
 print('test set evaluation: ')
 print("Accuracy score: ",accuracy_score(y_test, y_test_pred))
-print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues"))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues", values_format=""))
 plt.title("Confusion Matrix of Test Data ")
 plt.show()
 print("Classification report:\n",classification_report(y_test, y_test_pred))
@@ -1504,7 +1536,7 @@ y_test_pred = tree4.predict(x_test)
 # train set
 print('train set evaluation: ')
 print("Score: ",accuracy_score(y_train, y_train_pred))
-print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds"))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds", values_format=""))
 plt.title("Confusion Matrix of Train Data ")
 plt.show()
 print("Classification report:\n",classification_report(y_train, y_train_pred))
@@ -1513,7 +1545,7 @@ print("Classification report:\n",classification_report(y_train, y_train_pred))
 # test set
 print('test set evaluation: ')
 print("Score: ",accuracy_score(y_test, y_test_pred))
-print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues"))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues", values_format=""))
 plt.title("Confusion Matrix of Test Data ")
 plt.show()
 print("Classification report:\n",classification_report(y_test, y_test_pred))
@@ -1580,7 +1612,7 @@ y_test_pred = tree5.predict(x_test)
 # train set
 print('train set evaluation: ')
 print("Score: ",accuracy_score(y_train, y_train_pred))
-print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds"))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds", values_format=""))
 plt.title("Confusion Matrix of Train Data ")
 plt.show()
 print("Classification report:\n",classification_report(y_train, y_train_pred))
@@ -1589,7 +1621,7 @@ print("Classification report:\n",classification_report(y_train, y_train_pred))
 # test set
 print('test set evaluation: ')
 print("Score: ",accuracy_score(y_test, y_test_pred))
-print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues"))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues", values_format=""))
 plt.title("Confusion Matrix of Test Data ")
 plt.show()
 print("Classification report:\n",classification_report(y_test, y_test_pred))
@@ -1703,7 +1735,7 @@ y_test_pred = tree6.predict(x_test)
 # train set
 print('train set evaluation: ')
 print("Score: ",accuracy_score(y_train, y_train_pred))
-print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds"))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_train, y_train_pred,cmap="Reds", values_format=""))
 plt.title("Confusion Matrix of Train Data ")
 plt.show()
 print("Classification report:\n",classification_report(y_train, y_train_pred))
@@ -1712,7 +1744,7 @@ print("Classification report:\n",classification_report(y_train, y_train_pred))
 # test set
 print('test set evaluation: ')
 print("Score: ",accuracy_score(y_test, y_test_pred))
-print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues"))
+print("Confusion Matrix: \n",ConfusionMatrixDisplay.from_predictions(y_test, y_test_pred,cmap="Blues", values_format=""))
 plt.title("Confusion Matrix of Test Data ")
 plt.show()
 print("Classification report:\n",classification_report(y_test, y_test_pred))
@@ -1757,6 +1789,38 @@ plt.show()
 print("Now departure_arrival_time_convenient and ease_of_online_booking covering the major importance\
  of more than 50% together. Checkin_service importancec is having only 1.5% of importance for being loyal customer.")
 
+#%%
+# ROC-AUC
+from sklearn.metrics import roc_auc_score, roc_curve
+
+# generate a no skill prediction (majority class)
+ns_probs = [0 for _ in range(len(y_test))]
+# predict probabilities
+lr_probs = clf6.predict_proba(x_test)
+# keep probabilities for the positive outcome only
+lr_probs = lr_probs[:, 1]
+# calculate scores
+ns_auc = roc_auc_score(y_test, ns_probs)
+lr_auc = roc_auc_score(y_test, lr_probs)
+# summarize scores
+print('No Skill: ROC AUC=%.3f' % (ns_auc))
+print('Decision Tree: ROC AUC=%.3f' % (lr_auc))
+# calculate roc curves
+ns_fpr, ns_tpr, _ = roc_curve(y_test, ns_probs)
+lr_fpr, lr_tpr, _ = roc_curve(y_test, lr_probs)
+# plot the roc curve for the model
+plt.plot(ns_fpr, ns_tpr, linestyle='--', label='No Skill')
+plt.plot(lr_fpr, lr_tpr, marker='.', label='Logistic')
+# axis labels
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title("ROC-AUC of the final Decision Tree")
+# show the legend
+plt.legend()
+# show the plot
+plt.show()
+
+print("This ROC-AUC score also an inidication that this model is good model to predict loyal customers.")
 
 #%%
 # # Graphing the tree
